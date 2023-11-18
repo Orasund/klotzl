@@ -212,6 +212,20 @@ background int =
     "linear-gradient(to bottom right," ++ c1 ++ ", " ++ c2 ++ ")"
 
 
+viewportMeta : Html msg
+viewportMeta =
+    let
+        width : String
+        width =
+            String.fromFloat 400
+    in
+    Html.node "meta"
+        [ Html.Attributes.name "viewport"
+        , Html.Attributes.attribute "content" ("user-scalable=no,width=" ++ width)
+        ]
+        []
+
+
 toHtml : (Int -> msg) -> Game -> List (Html msg)
 toHtml msg game =
     [ { nodes = game.board
@@ -223,6 +237,7 @@ toHtml msg game =
       }
         |> tile
         |> Layout.el ([ Html.Attributes.style "height" "100%" ] ++ Layout.centered)
+    , viewportMeta
     , Html.node "link"
         [ Html.Attributes.rel "stylesheet"
         , Html.Attributes.href "style.css"

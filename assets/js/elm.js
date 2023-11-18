@@ -6786,6 +6786,223 @@ var $author$project$Port$fromElm = function (value) {
 var $elm$core$Basics$negate = function (n) {
 	return -n;
 };
+var $author$project$Game$Level$lvl1 = {
+	board: $elm$core$Dict$fromList(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				_Utils_Tuple2(1, 0),
+				-1),
+				_Utils_Tuple2(
+				_Utils_Tuple2(0, 0),
+				1)
+			])),
+	goal: _Utils_Tuple2(1, -1),
+	height: 1,
+	tiles: $elm$core$Dict$fromList(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				-1,
+				{
+					size: _Utils_Tuple2(1, 1),
+					topLeft: _Utils_Tuple2(1, 0)
+				}),
+				_Utils_Tuple2(
+				1,
+				{
+					size: _Utils_Tuple2(1, 1),
+					topLeft: _Utils_Tuple2(0, 0)
+				})
+			])),
+	width: 2
+};
+var $author$project$Main$init = function (_v0) {
+	return _Utils_Tuple2(
+		{
+			currentLevel: 1,
+			game: $elm$core$Maybe$Just($author$project$Game$Level$lvl1),
+			transitionTo: $elm$core$Maybe$Nothing
+		},
+		$author$project$Port$fromElm(
+			$author$project$PortDefinition$RegisterSounds($author$project$Gen$Sound$asList)));
+};
+var $author$project$Main$Received = function (a) {
+	return {$: 'Received', a: a};
+};
+var $elm$core$Platform$Sub$map = _Platform_map;
+var $elm$json$Json$Decode$decodeValue = _Json_run;
+var $author$project$Port$interopToElm = _Platform_incomingPort('interopToElm', $elm$json$Json$Decode$value);
+var $author$project$Port$toElm = $author$project$Port$interopToElm(
+	$elm$json$Json$Decode$decodeValue(
+		$dillonkearns$elm_ts_json$TsJson$Decode$decoder($author$project$PortDefinition$interop.toElm)));
+var $author$project$Main$subscriptions = function (_v0) {
+	return A2($elm$core$Platform$Sub$map, $author$project$Main$Received, $author$project$Port$toElm);
+};
+var $author$project$Main$LoadGame = {$: 'LoadGame'};
+var $author$project$PortDefinition$PlaySound = function (a) {
+	return {$: 'PlaySound', a: a};
+};
+var $author$project$Main$UnloadGame = {$: 'UnloadGame'};
+var $elm$core$Maybe$andThen = F2(
+	function (callback, maybeValue) {
+		if (maybeValue.$ === 'Just') {
+			var value = maybeValue.a;
+			return callback(value);
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
+var $author$project$Game$gameWon = function (game) {
+	return _Utils_eq(
+		$elm$core$Maybe$Just(-1),
+		A2($elm$core$Dict$get, game.goal, game.board));
+};
+var $author$project$Game$Level$lvl2 = {
+	board: $elm$core$Dict$fromList(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				_Utils_Tuple2(1, 1),
+				-1),
+				_Utils_Tuple2(
+				_Utils_Tuple2(0, 0),
+				1),
+				_Utils_Tuple2(
+				_Utils_Tuple2(0, 1),
+				2)
+			])),
+	goal: _Utils_Tuple2(1, -1),
+	height: 2,
+	tiles: $elm$core$Dict$fromList(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				-1,
+				{
+					size: _Utils_Tuple2(1, 1),
+					topLeft: _Utils_Tuple2(1, 1)
+				}),
+				_Utils_Tuple2(
+				1,
+				{
+					size: _Utils_Tuple2(1, 1),
+					topLeft: _Utils_Tuple2(0, 0)
+				}),
+				_Utils_Tuple2(
+				2,
+				{
+					size: _Utils_Tuple2(1, 1),
+					topLeft: _Utils_Tuple2(0, 1)
+				})
+			])),
+	width: 2
+};
+var $author$project$Game$Level$lvl3 = {
+	board: $elm$core$Dict$fromList(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				_Utils_Tuple2(1, 2),
+				-1),
+				_Utils_Tuple2(
+				_Utils_Tuple2(0, 0),
+				1),
+				_Utils_Tuple2(
+				_Utils_Tuple2(0, 1),
+				1),
+				_Utils_Tuple2(
+				_Utils_Tuple2(0, 2),
+				2)
+			])),
+	goal: _Utils_Tuple2(1, -1),
+	height: 3,
+	tiles: $elm$core$Dict$fromList(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				-1,
+				{
+					size: _Utils_Tuple2(1, 1),
+					topLeft: _Utils_Tuple2(1, 2)
+				}),
+				_Utils_Tuple2(
+				1,
+				{
+					size: _Utils_Tuple2(1, 2),
+					topLeft: _Utils_Tuple2(0, 0)
+				}),
+				_Utils_Tuple2(
+				2,
+				{
+					size: _Utils_Tuple2(1, 1),
+					topLeft: _Utils_Tuple2(0, 2)
+				})
+			])),
+	width: 2
+};
+var $author$project$Game$Level$lvl4 = {
+	board: $elm$core$Dict$fromList(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				_Utils_Tuple2(2, 2),
+				-1),
+				_Utils_Tuple2(
+				_Utils_Tuple2(1, 0),
+				1),
+				_Utils_Tuple2(
+				_Utils_Tuple2(1, 1),
+				1),
+				_Utils_Tuple2(
+				_Utils_Tuple2(0, 0),
+				2),
+				_Utils_Tuple2(
+				_Utils_Tuple2(0, 1),
+				3),
+				_Utils_Tuple2(
+				_Utils_Tuple2(0, 2),
+				4)
+			])),
+	goal: _Utils_Tuple2(2, -1),
+	height: 3,
+	tiles: $elm$core$Dict$fromList(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				-1,
+				{
+					size: _Utils_Tuple2(1, 1),
+					topLeft: _Utils_Tuple2(2, 2)
+				}),
+				_Utils_Tuple2(
+				1,
+				{
+					size: _Utils_Tuple2(1, 2),
+					topLeft: _Utils_Tuple2(1, 0)
+				}),
+				_Utils_Tuple2(
+				2,
+				{
+					size: _Utils_Tuple2(1, 1),
+					topLeft: _Utils_Tuple2(0, 0)
+				}),
+				_Utils_Tuple2(
+				3,
+				{
+					size: _Utils_Tuple2(1, 1),
+					topLeft: _Utils_Tuple2(0, 1)
+				}),
+				_Utils_Tuple2(
+				4,
+				{
+					size: _Utils_Tuple2(1, 1),
+					topLeft: _Utils_Tuple2(0, 2)
+				})
+			])),
+	width: 3
+};
 var $author$project$Game$Level$lvl5 = {
 	board: $elm$core$Dict$fromList(
 		_List_fromArray(
@@ -6850,43 +7067,23 @@ var $author$project$Game$Level$lvl5 = {
 			])),
 	width: 3
 };
-var $author$project$Main$init = function (_v0) {
-	return _Utils_Tuple2(
-		{game: $author$project$Game$Level$lvl5},
-		$author$project$Port$fromElm(
-			$author$project$PortDefinition$RegisterSounds($author$project$Gen$Sound$asList)));
-};
-var $author$project$Main$Received = function (a) {
-	return {$: 'Received', a: a};
-};
-var $elm$core$Platform$Sub$map = _Platform_map;
-var $elm$json$Json$Decode$decodeValue = _Json_run;
-var $author$project$Port$interopToElm = _Platform_incomingPort('interopToElm', $elm$json$Json$Decode$value);
-var $author$project$Port$toElm = $author$project$Port$interopToElm(
-	$elm$json$Json$Decode$decodeValue(
-		$dillonkearns$elm_ts_json$TsJson$Decode$decoder($author$project$PortDefinition$interop.toElm)));
-var $author$project$Main$subscriptions = function (_v0) {
-	return A2($elm$core$Platform$Sub$map, $author$project$Main$Received, $author$project$Port$toElm);
-};
-var $author$project$PortDefinition$PlaySound = function (a) {
-	return {$: 'PlaySound', a: a};
-};
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $author$project$Game$gameWon = function (game) {
-	return _Utils_eq(
-		$elm$core$Maybe$Just(-1),
-		A2($elm$core$Dict$get, game.goal, game.board));
+var $author$project$Game$Level$get = function (_int) {
+	switch (_int) {
+		case 1:
+			return $elm$core$Maybe$Just($author$project$Game$Level$lvl1);
+		case 2:
+			return $elm$core$Maybe$Just($author$project$Game$Level$lvl2);
+		case 3:
+			return $elm$core$Maybe$Just($author$project$Game$Level$lvl3);
+		case 4:
+			return $elm$core$Maybe$Just($author$project$Game$Level$lvl4);
+		case 5:
+			return $elm$core$Maybe$Just($author$project$Game$Level$lvl5);
+		default:
+			return $elm$core$Maybe$Nothing;
+	}
 };
 var $elm$core$Debug$log = _Debug_log;
-var $elm$core$Maybe$andThen = F2(
-	function (callback, maybeValue) {
-		if (maybeValue.$ === 'Just') {
-			var value = maybeValue.a;
-			return callback(value);
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	});
 var $elm$core$Dict$foldl = F3(
 	function (func, acc, dict) {
 		foldl:
@@ -7028,47 +7225,84 @@ var $author$project$Game$move = F2(
 				movements));
 	});
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $elm$core$Process$sleep = _Process_sleep;
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		var withNoCmd = function (a) {
 			return _Utils_Tuple2(a, $elm$core$Platform$Cmd$none);
 		};
-		if (msg.$ === 'MoveBlock') {
-			var _int = msg.a;
-			var _v1 = A2($author$project$Game$move, _int, model.game);
-			if (_v1.$ === 'Just') {
-				var game = _v1.a;
+		switch (msg.$) {
+			case 'MoveBlock':
+				var _int = msg.a;
+				var _v1 = A2(
+					$elm$core$Maybe$andThen,
+					$author$project$Game$move(_int),
+					model.game);
+				if (_v1.$ === 'Just') {
+					var game = _v1.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								game: $elm$core$Maybe$Just(game)
+							}),
+						$author$project$Game$gameWon(game) ? $elm$core$Platform$Cmd$batch(
+							_List_fromArray(
+								[
+									$author$project$Port$fromElm(
+									$author$project$PortDefinition$PlaySound(
+										{looping: false, sound: $author$project$Gen$Sound$Move})),
+									$author$project$Port$fromElm(
+									$author$project$PortDefinition$PlaySound(
+										{looping: false, sound: $author$project$Gen$Sound$Win})),
+									A2(
+									$elm$core$Task$perform,
+									function (_v2) {
+										return $author$project$Main$UnloadGame;
+									},
+									$elm$core$Process$sleep(500)),
+									A2(
+									$elm$core$Task$perform,
+									function (_v3) {
+										return $author$project$Main$LoadGame;
+									},
+									$elm$core$Process$sleep(1000))
+								])) : $author$project$Port$fromElm(
+							$author$project$PortDefinition$PlaySound(
+								{looping: false, sound: $author$project$Gen$Sound$Move})));
+				} else {
+					return _Utils_Tuple2(
+						model,
+						$author$project$Port$fromElm(
+							$author$project$PortDefinition$PlaySound(
+								{looping: false, sound: $author$project$Gen$Sound$Pass})));
+				}
+			case 'Received':
+				var result = msg.a;
+				if (result.$ === 'Ok') {
+					var sound = result.a.a;
+					return withNoCmd(model);
+				} else {
+					var error = result.a;
+					var _v5 = A2($elm$core$Debug$log, 'received invalid json', error);
+					return withNoCmd(model);
+				}
+			case 'UnloadGame':
 				return _Utils_Tuple2(
-					{game: game},
-					$author$project$Game$gameWon(game) ? $elm$core$Platform$Cmd$batch(
-						_List_fromArray(
-							[
-								$author$project$Port$fromElm(
-								$author$project$PortDefinition$PlaySound(
-									{looping: false, sound: $author$project$Gen$Sound$Move})),
-								$author$project$Port$fromElm(
-								$author$project$PortDefinition$PlaySound(
-									{looping: false, sound: $author$project$Gen$Sound$Win}))
-							])) : $author$project$Port$fromElm(
-						$author$project$PortDefinition$PlaySound(
-							{looping: false, sound: $author$project$Gen$Sound$Move})));
-			} else {
+					_Utils_update(
+						model,
+						{
+							currentLevel: model.currentLevel + 1,
+							game: $elm$core$Maybe$Nothing,
+							transitionTo: $author$project$Game$Level$get(model.currentLevel + 1)
+						}),
+					$elm$core$Platform$Cmd$none);
+			default:
 				return _Utils_Tuple2(
-					model,
-					$author$project$Port$fromElm(
-						$author$project$PortDefinition$PlaySound(
-							{looping: false, sound: $author$project$Gen$Sound$Pass})));
-			}
-		} else {
-			var result = msg.a;
-			if (result.$ === 'Ok') {
-				var sound = result.a.a;
-				return withNoCmd(model);
-			} else {
-				var error = result.a;
-				var _v3 = A2($elm$core$Debug$log, 'received invalid json', error);
-				return withNoCmd(model);
-			}
+					_Utils_update(
+						model,
+						{game: model.transitionTo, transitionTo: $elm$core$Maybe$Nothing}),
+					$elm$core$Platform$Cmd$none);
 		}
 	});
 var $author$project$Main$MoveBlock = function (a) {
@@ -7501,6 +7735,20 @@ var $author$project$View$tile = function (args) {
 					},
 					A2($elm$core$List$range, -1, args.height)))));
 };
+var $elm$core$String$fromFloat = _String_fromNumber;
+var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
+var $author$project$View$viewportMeta = function () {
+	var width = $elm$core$String$fromFloat(400);
+	return A3(
+		$elm$html$Html$node,
+		'meta',
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$name('viewport'),
+				A2($elm$html$Html$Attributes$attribute, 'content', 'user-scalable=no,width=' + width)
+			]),
+		_List_Nil);
+}();
 var $author$project$View$toHtml = F2(
 	function (msg, game) {
 		return _List_fromArray(
@@ -7515,6 +7763,7 @@ var $author$project$View$toHtml = F2(
 					$Orasund$elm_layout$Layout$centered),
 				$author$project$View$tile(
 					{goal: game.goal, height: game.height, nodes: game.board, onClick: msg, tiles: game.tiles, width: game.width})),
+				$author$project$View$viewportMeta,
 				A3(
 				$elm$html$Html$node,
 				'link',
@@ -7528,7 +7777,13 @@ var $author$project$View$toHtml = F2(
 	});
 var $author$project$Main$view = function (model) {
 	return {
-		body: A2($author$project$View$toHtml, $author$project$Main$MoveBlock, model.game),
+		body: A2(
+			$elm$core$Maybe$withDefault,
+			_List_Nil,
+			A2(
+				$elm$core$Maybe$map,
+				$author$project$View$toHtml($author$project$Main$MoveBlock),
+				model.game)),
 		title: 'Test'
 	};
 };

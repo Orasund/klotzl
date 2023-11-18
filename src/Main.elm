@@ -8,16 +8,23 @@ import Html exposing (Html)
 import Json.Decode exposing (Value)
 import Port
 import PortDefinition exposing (FromElm(..), ToElm(..))
+import Process
+import Task
 import View
 
 
 type alias Model =
-    { game : Game }
+    { game : Maybe Game
+    , currentLevel : Int
+    , transitionTo : Maybe Game
+    }
 
 
 type Msg
     = MoveBlock Int
     | Received (Result Json.Decode.Error ToElm)
+    | UnloadGame
+    | LoadGame
 
 
 main : Program () Model Msg
@@ -32,7 +39,10 @@ main =
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { game = Game.Level.lvl5 }
+    ( { game = Just Game.Level.lvl1
+      , currentLevel = 1
+      , transitionTo = Nothing
+      }
     , Gen.Sound.asList |> RegisterSounds |> Port.fromElm
     )
 
@@ -46,8 +56,9 @@ view :
 view model =
     { title = "Test"
     , body =
-        View.toHtml MoveBlock
-            model.game
+        model.game
+            |> Maybe.map (View.toHtml MoveBlock)
+            |> Maybe.withDefault []
     }
 
 
@@ -61,17 +72,20 @@ update msg model =
         MoveBlock int ->
             case
                 model.game
-                    |> Game.move int
+                    |> Maybe.andThen (Game.move int)
             of
                 Just game ->
-                    ( { game =
-                            game
+                    ( { model
+                        | game =
+                            Just game
                       }
                     , if Game.gameWon game then
                         [ PlaySound { sound = Move, looping = False }
                             |> Port.fromElm
                         , PlaySound { sound = Win, looping = False }
                             |> Port.fromElm
+                        , Task.perform (\() -> UnloadGame) (Process.sleep 500)
+                        , Task.perform (\() -> LoadGame) (Process.sleep 1000)
                         ]
                             |> Cmd.batch
 
@@ -97,6 +111,20 @@ update msg model =
                             Debug.log "received invalid json" error
                     in
                     model |> withNoCmd
+
+        UnloadGame ->
+            ( { model
+                | game = Nothing
+                , transitionTo = Game.Level.get (model.currentLevel + 1)
+                , currentLevel = model.currentLevel + 1
+              }
+            , Cmd.none
+            )
+
+        LoadGame ->
+            ( { model | game = model.transitionTo, transitionTo = Nothing }
+            , Cmd.none
+            )
 
 
 subscriptions : Model -> Sub Msg

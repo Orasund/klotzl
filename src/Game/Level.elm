@@ -4,6 +4,28 @@ import Dict
 import Game exposing (Game)
 
 
+get : Int -> Maybe Game
+get int =
+    case int of
+        1 ->
+            Just lvl1
+
+        2 ->
+            Just lvl2
+
+        3 ->
+            Just lvl3
+
+        4 ->
+            Just lvl4
+
+        5 ->
+            Just lvl5
+
+        _ ->
+            Nothing
+
+
 lvl1 : Game
 lvl1 =
     { board = Dict.fromList [ ( ( 1, 0 ), -1 ), ( ( 0, 0 ), 1 ) ]
