@@ -4370,6 +4370,107 @@ function _Browser_load(url)
 		}
 	}));
 }
+
+
+// CREATE
+
+var _Regex_never = /.^/;
+
+var _Regex_fromStringWith = F2(function(options, string)
+{
+	var flags = 'g';
+	if (options.multiline) { flags += 'm'; }
+	if (options.caseInsensitive) { flags += 'i'; }
+
+	try
+	{
+		return $elm$core$Maybe$Just(new RegExp(string, flags));
+	}
+	catch(error)
+	{
+		return $elm$core$Maybe$Nothing;
+	}
+});
+
+
+// USE
+
+var _Regex_contains = F2(function(re, string)
+{
+	return string.match(re) !== null;
+});
+
+
+var _Regex_findAtMost = F3(function(n, re, str)
+{
+	var out = [];
+	var number = 0;
+	var string = str;
+	var lastIndex = re.lastIndex;
+	var prevLastIndex = -1;
+	var result;
+	while (number++ < n && (result = re.exec(string)))
+	{
+		if (prevLastIndex == re.lastIndex) break;
+		var i = result.length - 1;
+		var subs = new Array(i);
+		while (i > 0)
+		{
+			var submatch = result[i];
+			subs[--i] = submatch
+				? $elm$core$Maybe$Just(submatch)
+				: $elm$core$Maybe$Nothing;
+		}
+		out.push(A4($elm$regex$Regex$Match, result[0], result.index, number, _List_fromArray(subs)));
+		prevLastIndex = re.lastIndex;
+	}
+	re.lastIndex = lastIndex;
+	return _List_fromArray(out);
+});
+
+
+var _Regex_replaceAtMost = F4(function(n, re, replacer, string)
+{
+	var count = 0;
+	function jsReplacer(match)
+	{
+		if (count++ >= n)
+		{
+			return match;
+		}
+		var i = arguments.length - 3;
+		var submatches = new Array(i);
+		while (i > 0)
+		{
+			var submatch = arguments[i];
+			submatches[--i] = submatch
+				? $elm$core$Maybe$Just(submatch)
+				: $elm$core$Maybe$Nothing;
+		}
+		return replacer(A4($elm$regex$Regex$Match, match, arguments[arguments.length - 2], count, _List_fromArray(submatches)));
+	}
+	return string.replace(re, jsReplacer);
+});
+
+var _Regex_splitAtMost = F3(function(n, re, str)
+{
+	var string = str;
+	var out = [];
+	var start = re.lastIndex;
+	var restoreLastIndex = re.lastIndex;
+	while (n--)
+	{
+		var result = re.exec(string);
+		if (!result) break;
+		out.push(string.slice(start, result.index));
+		start = re.lastIndex;
+	}
+	out.push(string.slice(start));
+	re.lastIndex = restoreLastIndex;
+	return _List_fromArray(out);
+});
+
+var _Regex_infinity = Infinity;
 var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
 var $elm$core$Basics$LT = {$: 'LT'};
@@ -5159,6 +5260,370 @@ var $elm$core$Task$perform = F2(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
 var $elm$browser$Browser$document = _Browser_document;
+var $author$project$PortDefinition$RegisterSounds = function (a) {
+	return {$: 'RegisterSounds', a: a};
+};
+var $author$project$Gen$Sound$Error = {$: 'Error'};
+var $author$project$Gen$Sound$Move = {$: 'Move'};
+var $author$project$Gen$Sound$Pass = {$: 'Pass'};
+var $author$project$Gen$Sound$Win = {$: 'Win'};
+var $author$project$Gen$Sound$asList = _List_fromArray(
+	[$author$project$Gen$Sound$Error, $author$project$Gen$Sound$Move, $author$project$Gen$Sound$Pass, $author$project$Gen$Sound$Win]);
+var $dillonkearns$elm_ts_json$TsJson$Encode$encoder = F2(
+	function (_v0, input) {
+		var encodeFn = _v0.a;
+		return encodeFn(input);
+	});
+var $dillonkearns$elm_ts_json$TsJson$Internal$Decode$Decoder = F2(
+	function (a, b) {
+		return {$: 'Decoder', a: a, b: b};
+	});
+var $dillonkearns$elm_ts_json$Internal$TsJsonType$Literal = function (a) {
+	return {$: 'Literal', a: a};
+};
+var $elm$json$Json$Decode$andThen = _Json_andThen;
+var $elm$json$Json$Decode$fail = _Json_fail;
+var $elm$json$Json$Decode$value = _Json_decodeValue;
+var $dillonkearns$elm_ts_json$TsJson$Decode$literal = F2(
+	function (value_, literalValue) {
+		return A2(
+			$dillonkearns$elm_ts_json$TsJson$Internal$Decode$Decoder,
+			A2(
+				$elm$json$Json$Decode$andThen,
+				function (decodeValue) {
+					return _Utils_eq(literalValue, decodeValue) ? $elm$json$Json$Decode$succeed(value_) : $elm$json$Json$Decode$fail(
+						'Expected the following literal value: ' + A2($elm$json$Json$Encode$encode, 0, literalValue));
+				},
+				$elm$json$Json$Decode$value),
+			$dillonkearns$elm_ts_json$Internal$TsJsonType$Literal(literalValue));
+	});
+var $elm$json$Json$Encode$null = _Json_encodeNull;
+var $dillonkearns$elm_ts_json$TsJson$Decode$null = function (value_) {
+	return A2($dillonkearns$elm_ts_json$TsJson$Decode$literal, value_, $elm$json$Json$Encode$null);
+};
+var $author$project$PortDefinition$flags = $dillonkearns$elm_ts_json$TsJson$Decode$null(
+	{});
+var $dillonkearns$elm_ts_json$Internal$TsJsonType$Boolean = {$: 'Boolean'};
+var $dillonkearns$elm_ts_json$TsJson$Internal$Encode$Encoder = F2(
+	function (a, b) {
+		return {$: 'Encoder', a: a, b: b};
+	});
+var $elm$json$Json$Encode$bool = _Json_wrap;
+var $dillonkearns$elm_ts_json$TsJson$Encode$bool = A2($dillonkearns$elm_ts_json$TsJson$Internal$Encode$Encoder, $elm$json$Json$Encode$bool, $dillonkearns$elm_ts_json$Internal$TsJsonType$Boolean);
+var $elm$core$Basics$composeR = F3(
+	function (f, g, x) {
+		return g(
+			f(x));
+	});
+var $dillonkearns$elm_ts_json$Internal$TsJsonType$TsNever = {$: 'TsNever'};
+var $dillonkearns$elm_ts_json$Internal$TsJsonType$Union = function (a) {
+	return {$: 'Union', a: a};
+};
+var $dillonkearns$elm_ts_json$Internal$TsJsonType$Unknown = {$: 'Unknown'};
+var $elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var $elm$core$Basics$neq = _Utils_notEqual;
+var $dillonkearns$elm_ts_json$Internal$TypeReducer$union = function (tsTypes) {
+	var withoutNevers = A2(
+		$elm$core$List$filter,
+		$elm$core$Basics$neq($dillonkearns$elm_ts_json$Internal$TsJsonType$TsNever),
+		tsTypes);
+	var hadNevers = !_Utils_eq(
+		$elm$core$List$length(tsTypes),
+		$elm$core$List$length(withoutNevers));
+	if (!withoutNevers.b) {
+		return hadNevers ? $dillonkearns$elm_ts_json$Internal$TsJsonType$TsNever : $dillonkearns$elm_ts_json$Internal$TsJsonType$Unknown;
+	} else {
+		if (!withoutNevers.b.b) {
+			var singleType = withoutNevers.a;
+			return singleType;
+		} else {
+			var first = withoutNevers.a;
+			var rest = withoutNevers.b;
+			return $dillonkearns$elm_ts_json$Internal$TsJsonType$Union(
+				_Utils_Tuple2(first, rest));
+		}
+	}
+};
+var $dillonkearns$elm_ts_json$TsJson$Encode$unwrapUnion = function (_v0) {
+	var rawValue = _v0.a;
+	return rawValue;
+};
+var $dillonkearns$elm_ts_json$TsJson$Encode$buildUnion = function (_v0) {
+	var toValue = _v0.a;
+	var tsTypes_ = _v0.b;
+	return A2(
+		$dillonkearns$elm_ts_json$TsJson$Internal$Encode$Encoder,
+		A2($elm$core$Basics$composeR, toValue, $dillonkearns$elm_ts_json$TsJson$Encode$unwrapUnion),
+		$dillonkearns$elm_ts_json$Internal$TypeReducer$union(tsTypes_));
+};
+var $dillonkearns$elm_ts_json$Internal$TsJsonType$List = function (a) {
+	return {$: 'List', a: a};
+};
+var $elm$json$Json$Encode$list = F2(
+	function (func, entries) {
+		return _Json_wrap(
+			A3(
+				$elm$core$List$foldl,
+				_Json_addEntry(func),
+				_Json_emptyArray(_Utils_Tuple0),
+				entries));
+	});
+var $dillonkearns$elm_ts_json$TsJson$Encode$list = function (_v0) {
+	var encodeFn = _v0.a;
+	var tsType_ = _v0.b;
+	return A2(
+		$dillonkearns$elm_ts_json$TsJson$Internal$Encode$Encoder,
+		function (input) {
+			return A2($elm$json$Json$Encode$list, encodeFn, input);
+		},
+		$dillonkearns$elm_ts_json$Internal$TsJsonType$List(tsType_));
+};
+var $dillonkearns$elm_ts_json$TsJson$Encode$map = F2(
+	function (mapFunction, _v0) {
+		var encodeFn = _v0.a;
+		var tsType_ = _v0.b;
+		return A2(
+			$dillonkearns$elm_ts_json$TsJson$Internal$Encode$Encoder,
+			function (input) {
+				return encodeFn(
+					mapFunction(input));
+			},
+			tsType_);
+	});
+var $dillonkearns$elm_ts_json$Internal$TsJsonType$TypeObject = function (a) {
+	return {$: 'TypeObject', a: a};
+};
+var $elm$core$List$maybeCons = F3(
+	function (f, mx, xs) {
+		var _v0 = f(mx);
+		if (_v0.$ === 'Just') {
+			var x = _v0.a;
+			return A2($elm$core$List$cons, x, xs);
+		} else {
+			return xs;
+		}
+	});
+var $elm$core$List$filterMap = F2(
+	function (f, xs) {
+		return A3(
+			$elm$core$List$foldr,
+			$elm$core$List$maybeCons(f),
+			_List_Nil,
+			xs);
+	});
+var $elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return $elm$core$Maybe$Just(
+				f(value));
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
+var $elm$json$Json$Encode$object = function (pairs) {
+	return _Json_wrap(
+		A3(
+			$elm$core$List$foldl,
+			F2(
+				function (_v0, obj) {
+					var k = _v0.a;
+					var v = _v0.b;
+					return A3(_Json_addField, k, v, obj);
+				}),
+			_Json_emptyObject(_Utils_Tuple0),
+			pairs));
+};
+var $dillonkearns$elm_ts_json$TsJson$Encode$object = function (propertyEncoders) {
+	var propertyTypes = $dillonkearns$elm_ts_json$Internal$TsJsonType$TypeObject(
+		A2(
+			$elm$core$List$map,
+			function (_v1) {
+				var optionality = _v1.a;
+				var propertyName = _v1.b;
+				var tsType_ = _v1.d;
+				return _Utils_Tuple3(optionality, propertyName, tsType_);
+			},
+			propertyEncoders));
+	var encodeObject = function (input) {
+		return $elm$json$Json$Encode$object(
+			A2(
+				$elm$core$List$filterMap,
+				function (_v0) {
+					var propertyName = _v0.b;
+					var encodeFn = _v0.c;
+					return A2(
+						$elm$core$Maybe$map,
+						function (encoded) {
+							return _Utils_Tuple2(propertyName, encoded);
+						},
+						encodeFn(input));
+				},
+				propertyEncoders));
+	};
+	return A2($dillonkearns$elm_ts_json$TsJson$Internal$Encode$Encoder, encodeObject, propertyTypes);
+};
+var $dillonkearns$elm_ts_json$TsJson$Encode$Property = F4(
+	function (a, b, c, d) {
+		return {$: 'Property', a: a, b: b, c: c, d: d};
+	});
+var $dillonkearns$elm_ts_json$Internal$TsJsonType$Required = {$: 'Required'};
+var $dillonkearns$elm_ts_json$TsJson$Encode$required = F3(
+	function (name, getter, _v0) {
+		var encodeFn = _v0.a;
+		var tsType_ = _v0.b;
+		return A4(
+			$dillonkearns$elm_ts_json$TsJson$Encode$Property,
+			$dillonkearns$elm_ts_json$Internal$TsJsonType$Required,
+			name,
+			function (input) {
+				return $elm$core$Maybe$Just(
+					encodeFn(
+						getter(input)));
+			},
+			tsType_);
+	});
+var $dillonkearns$elm_ts_json$Internal$TsJsonType$String = {$: 'String'};
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $dillonkearns$elm_ts_json$TsJson$Encode$string = A2($dillonkearns$elm_ts_json$TsJson$Internal$Encode$Encoder, $elm$json$Json$Encode$string, $dillonkearns$elm_ts_json$Internal$TsJsonType$String);
+var $author$project$Gen$Sound$toString = function (sound) {
+	switch (sound.$) {
+		case 'Error':
+			return 'error.mp3';
+		case 'Move':
+			return 'move.mp3';
+		case 'Pass':
+			return 'pass.mp3';
+		default:
+			return 'win.mp3';
+	}
+};
+var $dillonkearns$elm_ts_json$TsJson$Internal$Encode$UnionBuilder = F2(
+	function (a, b) {
+		return {$: 'UnionBuilder', a: a, b: b};
+	});
+var $dillonkearns$elm_ts_json$TsJson$Encode$union = function (constructor) {
+	return A2($dillonkearns$elm_ts_json$TsJson$Internal$Encode$UnionBuilder, constructor, _List_Nil);
+};
+var $dillonkearns$elm_ts_json$TsJson$Encode$literal = function (literalValue) {
+	return A2(
+		$dillonkearns$elm_ts_json$TsJson$Internal$Encode$Encoder,
+		function (_v0) {
+			return literalValue;
+		},
+		$dillonkearns$elm_ts_json$Internal$TsJsonType$Literal(literalValue));
+};
+var $dillonkearns$elm_ts_json$TsJson$Internal$Encode$UnionEncodeValue = function (a) {
+	return {$: 'UnionEncodeValue', a: a};
+};
+var $dillonkearns$elm_ts_json$TsJson$Encode$variant = F2(
+	function (_v0, _v1) {
+		var encoder_ = _v0.a;
+		var tsType_ = _v0.b;
+		var builder = _v1.a;
+		var tsTypes_ = _v1.b;
+		return A2(
+			$dillonkearns$elm_ts_json$TsJson$Internal$Encode$UnionBuilder,
+			builder(
+				A2($elm$core$Basics$composeR, encoder_, $dillonkearns$elm_ts_json$TsJson$Internal$Encode$UnionEncodeValue)),
+			A2($elm$core$List$cons, tsType_, tsTypes_));
+	});
+var $dillonkearns$elm_ts_json$TsJson$Encode$variantObject = F3(
+	function (variantName, objectFields, unionBuilder) {
+		return A2(
+			$dillonkearns$elm_ts_json$TsJson$Encode$variant,
+			$dillonkearns$elm_ts_json$TsJson$Encode$object(
+				A2(
+					$elm$core$List$cons,
+					A3(
+						$dillonkearns$elm_ts_json$TsJson$Encode$required,
+						'tag',
+						$elm$core$Basics$identity,
+						$dillonkearns$elm_ts_json$TsJson$Encode$literal(
+							$elm$json$Json$Encode$string(variantName))),
+					objectFields)),
+			unionBuilder);
+	});
+var $dillonkearns$elm_ts_json$TsJson$Encode$variantTagged = F3(
+	function (tagName, dataEncoder, builder) {
+		return A3(
+			$dillonkearns$elm_ts_json$TsJson$Encode$variantObject,
+			tagName,
+			_List_fromArray(
+				[
+					A3($dillonkearns$elm_ts_json$TsJson$Encode$required, 'data', $elm$core$Basics$identity, dataEncoder)
+				]),
+			builder);
+	});
+var $author$project$PortDefinition$fromElm = function () {
+	var soundEncoder = A2($dillonkearns$elm_ts_json$TsJson$Encode$map, $author$project$Gen$Sound$toString, $dillonkearns$elm_ts_json$TsJson$Encode$string);
+	return $dillonkearns$elm_ts_json$TsJson$Encode$buildUnion(
+		A3(
+			$dillonkearns$elm_ts_json$TsJson$Encode$variantTagged,
+			'registerSounds',
+			$dillonkearns$elm_ts_json$TsJson$Encode$list(soundEncoder),
+			A3(
+				$dillonkearns$elm_ts_json$TsJson$Encode$variantTagged,
+				'stopSound',
+				soundEncoder,
+				A3(
+					$dillonkearns$elm_ts_json$TsJson$Encode$variantTagged,
+					'playSound',
+					$dillonkearns$elm_ts_json$TsJson$Encode$object(
+						_List_fromArray(
+							[
+								A3(
+								$dillonkearns$elm_ts_json$TsJson$Encode$required,
+								'sound',
+								function (obj) {
+									return $author$project$Gen$Sound$toString(obj.sound);
+								},
+								$dillonkearns$elm_ts_json$TsJson$Encode$string),
+								A3(
+								$dillonkearns$elm_ts_json$TsJson$Encode$required,
+								'looping',
+								function ($) {
+									return $.looping;
+								},
+								$dillonkearns$elm_ts_json$TsJson$Encode$bool)
+							])),
+					$dillonkearns$elm_ts_json$TsJson$Encode$union(
+						F4(
+							function (playSound, stopSound, registerSounds, value) {
+								switch (value.$) {
+									case 'RegisterSounds':
+										var list = value.a;
+										return registerSounds(list);
+									case 'PlaySound':
+										var args = value.a;
+										return playSound(args);
+									default:
+										var args = value.a;
+										return stopSound(args);
+								}
+							}))))));
+}();
+var $author$project$PortDefinition$SoundEnded = function (a) {
+	return {$: 'SoundEnded', a: a};
+};
+var $dillonkearns$elm_ts_json$Internal$TsJsonType$ArrayIndex = F2(
+	function (a, b) {
+		return {$: 'ArrayIndex', a: a, b: b};
+	});
+var $dillonkearns$elm_ts_json$Internal$TsJsonType$Intersection = function (a) {
+	return {$: 'Intersection', a: a};
+};
+var $dillonkearns$elm_ts_json$Internal$TsJsonType$Optional = {$: 'Optional'};
 var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
 var $elm$core$Dict$Black = {$: 'Black'};
@@ -5270,159 +5735,31 @@ var $elm$core$Dict$insert = F3(
 			return x;
 		}
 	});
-var $elm$core$Dict$fromList = function (assocs) {
+var $elm$core$Dict$values = function (dict) {
 	return A3(
-		$elm$core$List$foldl,
-		F2(
-			function (_v0, dict) {
-				var key = _v0.a;
-				var value = _v0.b;
-				return A3($elm$core$Dict$insert, key, value, dict);
+		$elm$core$Dict$foldr,
+		F3(
+			function (key, value, valueList) {
+				return A2($elm$core$List$cons, value, valueList);
 			}),
-		$elm$core$Dict$empty,
-		assocs);
+		_List_Nil,
+		dict);
 };
-var $elm$core$Basics$negate = function (n) {
-	return -n;
-};
-var $author$project$Game$Level$lvl5 = {
-	board: $elm$core$Dict$fromList(
-		_List_fromArray(
-			[
-				_Utils_Tuple2(
-				_Utils_Tuple2(2, 2),
-				-1),
-				_Utils_Tuple2(
-				_Utils_Tuple2(0, 0),
-				1),
-				_Utils_Tuple2(
-				_Utils_Tuple2(0, 1),
-				1),
-				_Utils_Tuple2(
-				_Utils_Tuple2(2, 0),
-				2),
-				_Utils_Tuple2(
-				_Utils_Tuple2(2, 1),
-				2),
-				_Utils_Tuple2(
-				_Utils_Tuple2(1, 1),
-				3),
-				_Utils_Tuple2(
-				_Utils_Tuple2(1, 2),
-				4)
-			])),
-	goal: _Utils_Tuple2(2, -1),
-	height: 3,
-	tiles: $elm$core$Dict$fromList(
-		_List_fromArray(
-			[
-				_Utils_Tuple2(
-				-1,
-				{
-					size: _Utils_Tuple2(1, 1),
-					topLeft: _Utils_Tuple2(2, 2)
-				}),
-				_Utils_Tuple2(
-				1,
-				{
-					size: _Utils_Tuple2(1, 2),
-					topLeft: _Utils_Tuple2(0, 0)
-				}),
-				_Utils_Tuple2(
-				2,
-				{
-					size: _Utils_Tuple2(1, 2),
-					topLeft: _Utils_Tuple2(2, 0)
-				}),
-				_Utils_Tuple2(
-				3,
-				{
-					size: _Utils_Tuple2(1, 1),
-					topLeft: _Utils_Tuple2(1, 1)
-				}),
-				_Utils_Tuple2(
-				4,
-				{
-					size: _Utils_Tuple2(1, 1),
-					topLeft: _Utils_Tuple2(1, 2)
-				})
-			])),
-	width: 3
-};
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $author$project$Main$init = function (_v0) {
-	return _Utils_Tuple2(
-		{game: $author$project$Game$Level$lvl5},
-		$elm$core$Platform$Cmd$none);
-};
-var $elm$core$Platform$Sub$batch = _Platform_batch;
-var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
-var $author$project$Main$subscriptions = function (model) {
-	return $elm$core$Platform$Sub$none;
-};
-var $elm$core$Maybe$andThen = F2(
-	function (callback, maybeValue) {
-		if (maybeValue.$ === 'Just') {
-			var value = maybeValue.a;
-			return callback(value);
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	});
-var $elm$core$Dict$foldl = F3(
-	function (func, acc, dict) {
-		foldl:
-		while (true) {
-			if (dict.$ === 'RBEmpty_elm_builtin') {
-				return acc;
-			} else {
-				var key = dict.b;
-				var value = dict.c;
-				var left = dict.d;
-				var right = dict.e;
-				var $temp$func = func,
-					$temp$acc = A3(
-					func,
-					key,
-					value,
-					A3($elm$core$Dict$foldl, func, acc, left)),
-					$temp$dict = right;
-				func = $temp$func;
-				acc = $temp$acc;
-				dict = $temp$dict;
-				continue foldl;
-			}
-		}
-	});
-var $elm$core$Dict$filter = F2(
-	function (isGood, dict) {
-		return A3(
-			$elm$core$Dict$foldl,
-			F3(
-				function (k, v, d) {
-					return A2(isGood, k, v) ? A3($elm$core$Dict$insert, k, v, d) : d;
-				}),
-			$elm$core$Dict$empty,
-			dict);
-	});
-var $elm$core$List$maybeCons = F3(
-	function (f, mx, xs) {
-		var _v0 = f(mx);
-		if (_v0.$ === 'Just') {
-			var x = _v0.a;
-			return A2($elm$core$List$cons, x, xs);
-		} else {
-			return xs;
-		}
-	});
-var $elm$core$List$filterMap = F2(
-	function (f, xs) {
-		return A3(
-			$elm$core$List$foldr,
-			$elm$core$List$maybeCons(f),
-			_List_Nil,
-			xs);
+var $dillonkearns$elm_ts_json$Internal$TypeReducer$deduplicateBy = F2(
+	function (toComparable, list) {
+		return $elm$core$Dict$values(
+			A3(
+				$elm$core$List$foldl,
+				F2(
+					function (value, accum) {
+						return A3(
+							$elm$core$Dict$insert,
+							toComparable(value),
+							value,
+							accum);
+					}),
+				$elm$core$Dict$empty,
+				list));
 	});
 var $elm$core$Dict$get = F2(
 	function (targetKey, dict) {
@@ -5455,25 +5792,6 @@ var $elm$core$Dict$get = F2(
 			}
 		}
 	});
-var $elm$core$Maybe$map = F2(
-	function (f, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return $elm$core$Maybe$Just(
-				f(value));
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	});
-var $elm$core$Tuple$mapBoth = F3(
-	function (funcA, funcB, _v0) {
-		var x = _v0.a;
-		var y = _v0.b;
-		return _Utils_Tuple2(
-			funcA(x),
-			funcB(y));
-	});
-var $elm$core$Basics$neq = _Utils_notEqual;
 var $elm$core$Dict$getMin = function (dict) {
 	getMin:
 	while (true) {
@@ -5847,6 +6165,109 @@ var $elm$core$Dict$update = F3(
 			return A2($elm$core$Dict$remove, targetKey, dictionary);
 		}
 	});
+var $elm_community$dict_extra$Dict$Extra$insertDedupe = F4(
+	function (combine, key, value, dict) {
+		var _with = function (mbValue) {
+			if (mbValue.$ === 'Just') {
+				var oldValue = mbValue.a;
+				return $elm$core$Maybe$Just(
+					A2(combine, oldValue, value));
+			} else {
+				return $elm$core$Maybe$Just(value);
+			}
+		};
+		return A3($elm$core$Dict$update, key, _with, dict);
+	});
+var $elm_community$dict_extra$Dict$Extra$fromListDedupeBy = F3(
+	function (combine, keyfn, xs) {
+		return A3(
+			$elm$core$List$foldl,
+			F2(
+				function (x, acc) {
+					return A4(
+						$elm_community$dict_extra$Dict$Extra$insertDedupe,
+						combine,
+						keyfn(x),
+						x,
+						acc);
+				}),
+			$elm$core$Dict$empty,
+			xs);
+	});
+var $dillonkearns$elm_ts_json$Internal$TypeReducer$either = F2(
+	function (predicateFn, _v0) {
+		var type1 = _v0.a;
+		var type2 = _v0.b;
+		return predicateFn(type1) || predicateFn(type2);
+	});
+var $dillonkearns$elm_ts_json$Internal$TypeReducer$isNonEmptyObject = function (tsType) {
+	if ((tsType.$ === 'TypeObject') && tsType.a.b) {
+		var _v1 = tsType.a;
+		var atLeastOne = _v1.a;
+		var possiblyMore = _v1.b;
+		return true;
+	} else {
+		return false;
+	}
+};
+var $dillonkearns$elm_ts_json$Internal$TypeReducer$isPrimitive = function (tsType) {
+	switch (tsType.$) {
+		case 'Number':
+			return true;
+		case 'Integer':
+			return true;
+		case 'String':
+			return true;
+		case 'Boolean':
+			return true;
+		default:
+			return false;
+	}
+};
+var $dillonkearns$elm_ts_json$Internal$TypeReducer$isContradictory = function (types) {
+	return A2($dillonkearns$elm_ts_json$Internal$TypeReducer$either, $dillonkearns$elm_ts_json$Internal$TypeReducer$isNonEmptyObject, types) && A2($dillonkearns$elm_ts_json$Internal$TypeReducer$either, $dillonkearns$elm_ts_json$Internal$TypeReducer$isPrimitive, types);
+};
+var $elm$core$Dict$fromList = function (assocs) {
+	return A3(
+		$elm$core$List$foldl,
+		F2(
+			function (_v0, dict) {
+				var key = _v0.a;
+				var value = _v0.b;
+				return A3($elm$core$Dict$insert, key, value, dict);
+			}),
+		$elm$core$Dict$empty,
+		assocs);
+};
+var $elm$core$List$maximum = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return $elm$core$Maybe$Just(
+			A3($elm$core$List$foldl, $elm$core$Basics$max, x, xs));
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $dillonkearns$elm_ts_json$Internal$TypeToString$parenthesize = function (string) {
+	return '(' + (string + ')');
+};
+var $dillonkearns$elm_ts_json$Internal$TypeToString$doubleQuote = function (string) {
+	return '\"' + (string + '\"');
+};
+var $elm$regex$Regex$Match = F4(
+	function (match, index, number, submatches) {
+		return {index: index, match: match, number: number, submatches: submatches};
+	});
+var $elm$regex$Regex$find = _Regex_findAtMost(_Regex_infinity);
+var $elm$regex$Regex$fromStringWith = _Regex_fromStringWith;
+var $elm$regex$Regex$fromString = function (string) {
+	return A2(
+		$elm$regex$Regex$fromStringWith,
+		{caseInsensitive: false, multiline: false},
+		string);
+};
+var $elm$regex$Regex$never = _Regex_never;
 var $elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
 		if (maybe.$ === 'Just') {
@@ -5855,6 +6276,660 @@ var $elm$core$Maybe$withDefault = F2(
 		} else {
 			return _default;
 		}
+	});
+var $dillonkearns$elm_ts_json$Internal$TypeToString$identifierRegex = A2(
+	$elm$core$Maybe$withDefault,
+	$elm$regex$Regex$never,
+	$elm$regex$Regex$fromString('^[a-zA-Z_][a-zA-Z0-9_]*$'));
+var $elm$core$List$isEmpty = function (xs) {
+	if (!xs.b) {
+		return true;
+	} else {
+		return false;
+	}
+};
+var $dillonkearns$elm_ts_json$Internal$TypeToString$isIdentifier = A2(
+	$elm$core$Basics$composeR,
+	$elm$regex$Regex$find($dillonkearns$elm_ts_json$Internal$TypeToString$identifierRegex),
+	$elm$core$List$isEmpty);
+var $dillonkearns$elm_ts_json$Internal$TypeToString$quoteObjectKey = function (key) {
+	var needsQuotes = $dillonkearns$elm_ts_json$Internal$TypeToString$isIdentifier(key);
+	return needsQuotes ? $dillonkearns$elm_ts_json$Internal$TypeToString$doubleQuote(key) : key;
+};
+var $elm$core$List$sortBy = _List_sortBy;
+var $dillonkearns$elm_ts_json$Internal$TypeToString$parenthesizeToString = function (type_) {
+	var needsParens = function () {
+		if (type_.$ === 'Union') {
+			var types = type_.a;
+			return true;
+		} else {
+			return false;
+		}
+	}();
+	return needsParens ? $dillonkearns$elm_ts_json$Internal$TypeToString$parenthesize(
+		$dillonkearns$elm_ts_json$Internal$TypeToString$toString(type_)) : $dillonkearns$elm_ts_json$Internal$TypeToString$toString(type_);
+};
+var $dillonkearns$elm_ts_json$Internal$TypeToString$toString = function (tsType_) {
+	switch (tsType_.$) {
+		case 'TsNever':
+			return 'never';
+		case 'String':
+			return 'string';
+		case 'Integer':
+			return 'number';
+		case 'Number':
+			return 'number';
+		case 'Boolean':
+			return 'boolean';
+		case 'Unknown':
+			return 'JsonValue';
+		case 'List':
+			var listType = tsType_.a;
+			return $dillonkearns$elm_ts_json$Internal$TypeToString$parenthesizeToString(listType) + '[]';
+		case 'Literal':
+			var literalValue = tsType_.a;
+			return A2($elm$json$Json$Encode$encode, 0, literalValue);
+		case 'Union':
+			var _v1 = tsType_.a;
+			var firstType = _v1.a;
+			var tsTypes = _v1.b;
+			return A2(
+				$elm$core$String$join,
+				' | ',
+				A2(
+					$elm$core$List$map,
+					$dillonkearns$elm_ts_json$Internal$TypeToString$parenthesizeToString,
+					A2($elm$core$List$cons, firstType, tsTypes)));
+		case 'TypeObject':
+			var keyTypes = tsType_.a;
+			return '{ ' + (A2(
+				$elm$core$String$join,
+				'; ',
+				A2(
+					$elm$core$List$map,
+					function (_v3) {
+						var optionality = _v3.a;
+						var key = _v3.b;
+						var tsType__ = _v3.c;
+						var quotedKey = $dillonkearns$elm_ts_json$Internal$TypeToString$quoteObjectKey(key);
+						return function () {
+							if (optionality.$ === 'Required') {
+								return quotedKey;
+							} else {
+								return quotedKey + '?';
+							}
+						}() + (' : ' + $dillonkearns$elm_ts_json$Internal$TypeToString$toString(tsType__));
+					},
+					A2(
+						$elm$core$List$sortBy,
+						function (_v2) {
+							var fieldName = _v2.b;
+							return fieldName;
+						},
+						keyTypes))) + ' }');
+		case 'ObjectWithUniformValues':
+			var tsType = tsType_.a;
+			return '{ [key: string]: ' + ($dillonkearns$elm_ts_json$Internal$TypeToString$toString(tsType) + ' }');
+		case 'Tuple':
+			var tsTypes = tsType_.a;
+			var maybeRestType = tsType_.b;
+			var restTypePart = A2(
+				$elm$core$Maybe$map,
+				function (restType) {
+					return '...(' + ($dillonkearns$elm_ts_json$Internal$TypeToString$toString(restType) + ')[]');
+				},
+				maybeRestType);
+			return '[ ' + (A2(
+				$elm$core$String$join,
+				', ',
+				A2(
+					$elm$core$List$filterMap,
+					$elm$core$Basics$identity,
+					_Utils_ap(
+						A2(
+							$elm$core$List$map,
+							function (type_) {
+								return $elm$core$Maybe$Just(
+									$dillonkearns$elm_ts_json$Internal$TypeToString$toString(type_));
+							},
+							tsTypes),
+						_List_fromArray(
+							[restTypePart])))) + ' ]');
+		case 'Intersection':
+			var types = tsType_.a;
+			return $dillonkearns$elm_ts_json$Internal$TypeToString$parenthesize(
+				A2(
+					$elm$core$String$join,
+					' & ',
+					A2($elm$core$List$map, $dillonkearns$elm_ts_json$Internal$TypeToString$parenthesizeToString, types)));
+		default:
+			var _v5 = tsType_.a;
+			var index = _v5.a;
+			var tsType = _v5.b;
+			var otherIndices = tsType_.b;
+			var dict = $elm$core$Dict$fromList(
+				A2(
+					$elm$core$List$cons,
+					_Utils_Tuple2(index, tsType),
+					otherIndices));
+			var highestIndex = A2(
+				$elm$core$Maybe$withDefault,
+				0,
+				$elm$core$List$maximum(
+					$elm$core$Dict$keys(dict)));
+			return '[' + (A2(
+				$elm$core$String$join,
+				',',
+				_Utils_ap(
+					A2(
+						$elm$core$List$map,
+						function (cur) {
+							return $dillonkearns$elm_ts_json$Internal$TypeToString$toString(
+								A2(
+									$elm$core$Maybe$withDefault,
+									$dillonkearns$elm_ts_json$Internal$TsJsonType$Unknown,
+									A2($elm$core$Dict$get, cur, dict)));
+						},
+						A2($elm$core$List$range, 0, highestIndex)),
+					_List_fromArray(
+						['...JsonValue[]']))) + ']');
+	}
+};
+var $dillonkearns$elm_ts_json$Internal$TypeReducer$intersect = F2(
+	function (type1, type2) {
+		if ($dillonkearns$elm_ts_json$Internal$TypeReducer$isContradictory(
+			_Utils_Tuple2(type1, type2))) {
+			return $dillonkearns$elm_ts_json$Internal$TsJsonType$TsNever;
+		} else {
+			if (_Utils_eq(type1, type2)) {
+				return type1;
+			} else {
+				var _v8 = _Utils_Tuple2(type1, type2);
+				_v8$1:
+				while (true) {
+					_v8$8:
+					while (true) {
+						switch (_v8.a.$) {
+							case 'Unknown':
+								var _v9 = _v8.a;
+								var known = _v8.b;
+								return known;
+							case 'Intersection':
+								switch (_v8.b.$) {
+									case 'Unknown':
+										break _v8$1;
+									case 'Intersection':
+										var types1 = _v8.a.a;
+										var types2 = _v8.b.a;
+										return $dillonkearns$elm_ts_json$Internal$TypeReducer$simplifyIntersection(
+											_Utils_ap(types1, types2));
+									default:
+										break _v8$8;
+								}
+							case 'ArrayIndex':
+								switch (_v8.b.$) {
+									case 'Unknown':
+										break _v8$1;
+									case 'ArrayIndex':
+										if ((!_v8.a.b.b) && (!_v8.b.b.b)) {
+											var _v11 = _v8.a;
+											var _v12 = _v11.a;
+											var index1 = _v12.a;
+											var indexType1 = _v12.b;
+											var _v13 = _v8.b;
+											var _v14 = _v13.a;
+											var index2 = _v14.a;
+											var indexType2 = _v14.b;
+											return A2(
+												$dillonkearns$elm_ts_json$Internal$TsJsonType$ArrayIndex,
+												_Utils_Tuple2(index1, indexType1),
+												_List_fromArray(
+													[
+														_Utils_Tuple2(index2, indexType2)
+													]));
+										} else {
+											break _v8$8;
+										}
+									default:
+										break _v8$8;
+								}
+							case 'TypeObject':
+								switch (_v8.b.$) {
+									case 'Unknown':
+										break _v8$1;
+									case 'TypeObject':
+										var fields1 = _v8.a.a;
+										var fields2 = _v8.b.a;
+										return $dillonkearns$elm_ts_json$Internal$TsJsonType$TypeObject(
+											A2($dillonkearns$elm_ts_json$Internal$TypeReducer$mergeFields, fields1, fields2));
+									case 'Union':
+										var fields1 = _v8.a.a;
+										var unionedTypes = _v8.b.a;
+										return $dillonkearns$elm_ts_json$Internal$TsJsonType$Intersection(
+											_List_fromArray(
+												[type1, type2]));
+									default:
+										break _v8$8;
+								}
+							case 'String':
+								switch (_v8.b.$) {
+									case 'Unknown':
+										break _v8$1;
+									case 'Number':
+										var _v15 = _v8.a;
+										var _v16 = _v8.b;
+										return $dillonkearns$elm_ts_json$Internal$TsJsonType$TsNever;
+									default:
+										break _v8$8;
+								}
+							case 'Number':
+								switch (_v8.b.$) {
+									case 'Unknown':
+										break _v8$1;
+									case 'String':
+										var _v17 = _v8.a;
+										var _v18 = _v8.b;
+										return $dillonkearns$elm_ts_json$Internal$TsJsonType$TsNever;
+									default:
+										break _v8$8;
+								}
+							default:
+								if (_v8.b.$ === 'Unknown') {
+									break _v8$1;
+								} else {
+									break _v8$8;
+								}
+						}
+					}
+					return _Utils_eq(type1, type2) ? type1 : $dillonkearns$elm_ts_json$Internal$TsJsonType$Intersection(
+						_List_fromArray(
+							[type1, type2]));
+				}
+				var known = _v8.a;
+				var _v10 = _v8.b;
+				return known;
+			}
+		}
+	});
+var $dillonkearns$elm_ts_json$Internal$TypeReducer$mergeFields = F2(
+	function (fields1, fields2) {
+		return $elm$core$Dict$values(
+			A3(
+				$elm_community$dict_extra$Dict$Extra$fromListDedupeBy,
+				F2(
+					function (_v5, _v6) {
+						var optionality1 = _v5.a;
+						var fieldName1 = _v5.b;
+						var fieldType1 = _v5.c;
+						var optionality2 = _v6.a;
+						var fieldName2 = _v6.b;
+						var fieldType2 = _v6.c;
+						return (_Utils_eq(optionality1, $dillonkearns$elm_ts_json$Internal$TsJsonType$Required) || _Utils_eq(optionality2, $dillonkearns$elm_ts_json$Internal$TsJsonType$Required)) ? _Utils_Tuple3(
+							$dillonkearns$elm_ts_json$Internal$TsJsonType$Required,
+							fieldName1,
+							A2($dillonkearns$elm_ts_json$Internal$TypeReducer$intersect, fieldType1, fieldType2)) : _Utils_Tuple3($dillonkearns$elm_ts_json$Internal$TsJsonType$Optional, fieldName1, fieldType1);
+					}),
+				function (_v7) {
+					var fieldName = _v7.b;
+					return fieldName;
+				},
+				_Utils_ap(fields1, fields2)));
+	});
+var $dillonkearns$elm_ts_json$Internal$TypeReducer$simplifyIntersection = function (types) {
+	var thing = function () {
+		var _v0 = A2($dillonkearns$elm_ts_json$Internal$TypeReducer$deduplicateBy, $dillonkearns$elm_ts_json$Internal$TypeToString$toString, types);
+		if (_v0.b) {
+			if (!_v0.b.b) {
+				var single = _v0.a;
+				return single;
+			} else {
+				var first = _v0.a;
+				var rest = _v0.b;
+				if (first.$ === 'TypeObject') {
+					var fields = first.a;
+					var _v2 = A3(
+						$elm$core$List$foldr,
+						F2(
+							function (thisType, _v3) {
+								var objectsSoFar = _v3.a;
+								var otherSoFar = _v3.b;
+								if (thisType.$ === 'TypeObject') {
+									var theseFields = thisType.a;
+									return _Utils_Tuple2(
+										A2($dillonkearns$elm_ts_json$Internal$TypeReducer$mergeFields, theseFields, objectsSoFar),
+										otherSoFar);
+								} else {
+									return _Utils_Tuple2(
+										objectsSoFar,
+										A2($elm$core$List$cons, thisType, otherSoFar));
+								}
+							}),
+						_Utils_Tuple2(fields, _List_Nil),
+						rest);
+					var otherObjects = _v2.a;
+					var nonObjectTypes = _v2.b;
+					return $dillonkearns$elm_ts_json$Internal$TsJsonType$Intersection(
+						A2(
+							$elm$core$List$cons,
+							$dillonkearns$elm_ts_json$Internal$TsJsonType$TypeObject(otherObjects),
+							nonObjectTypes));
+				} else {
+					return $dillonkearns$elm_ts_json$Internal$TsJsonType$Intersection(types);
+				}
+			}
+		} else {
+			return $dillonkearns$elm_ts_json$Internal$TsJsonType$TsNever;
+		}
+	}();
+	return thing;
+};
+var $dillonkearns$elm_ts_json$TsJson$Decode$map2 = F3(
+	function (mapFn, _v0, _v1) {
+		var innerDecoder1 = _v0.a;
+		var innerType1 = _v0.b;
+		var innerDecoder2 = _v1.a;
+		var innerType2 = _v1.b;
+		return A2(
+			$dillonkearns$elm_ts_json$TsJson$Internal$Decode$Decoder,
+			A3($elm$json$Json$Decode$map2, mapFn, innerDecoder1, innerDecoder2),
+			A2($dillonkearns$elm_ts_json$Internal$TypeReducer$intersect, innerType1, innerType2));
+	});
+var $dillonkearns$elm_ts_json$TsJson$Decode$andMap = $dillonkearns$elm_ts_json$TsJson$Decode$map2($elm$core$Basics$apR);
+var $dillonkearns$elm_ts_json$TsJson$Decode$andThen = F2(
+	function (_v0, _v1) {
+		var _function = _v0.a;
+		var tsTypes = _v0.b;
+		var innerDecoder = _v1.a;
+		var innerType = _v1.b;
+		var andThenDecoder_ = function (value_) {
+			var _v2 = _function(value_);
+			var innerDecoder_ = _v2.a;
+			var innerType_ = _v2.b;
+			return innerDecoder_;
+		};
+		return A2(
+			$dillonkearns$elm_ts_json$TsJson$Internal$Decode$Decoder,
+			A2($elm$json$Json$Decode$andThen, andThenDecoder_, innerDecoder),
+			A2(
+				$dillonkearns$elm_ts_json$Internal$TypeReducer$intersect,
+				innerType,
+				$dillonkearns$elm_ts_json$Internal$TypeReducer$union(tsTypes)));
+	});
+var $dillonkearns$elm_ts_json$TsJson$Decode$StaticAndThen = F2(
+	function (a, b) {
+		return {$: 'StaticAndThen', a: a, b: b};
+	});
+var $dillonkearns$elm_ts_json$TsJson$Decode$andThenInit = function (constructor) {
+	return A2($dillonkearns$elm_ts_json$TsJson$Decode$StaticAndThen, constructor, _List_Nil);
+};
+var $dillonkearns$elm_ts_json$TsJson$Decode$decoder = function (_v0) {
+	var decoder_ = _v0.a;
+	return decoder_;
+};
+var $elm$json$Json$Decode$field = _Json_decodeField;
+var $elm$json$Json$Decode$string = _Json_decodeString;
+var $dillonkearns$elm_ts_json$TsJson$Decode$tsType = function (_v0) {
+	var tsType_ = _v0.b;
+	return tsType_;
+};
+var $dillonkearns$elm_ts_json$TsJson$Decode$discriminatedUnion = F2(
+	function (discriminantField, decoders) {
+		var table = $elm$core$Dict$fromList(decoders);
+		return A2(
+			$dillonkearns$elm_ts_json$TsJson$Internal$Decode$Decoder,
+			A2(
+				$elm$json$Json$Decode$andThen,
+				function (discriminantValue) {
+					var _v0 = A2($elm$core$Dict$get, discriminantValue, table);
+					if (_v0.$ === 'Just') {
+						var variantDecoder = _v0.a;
+						return $dillonkearns$elm_ts_json$TsJson$Decode$decoder(variantDecoder);
+					} else {
+						return $elm$json$Json$Decode$fail('Unexpected discriminant value \'' + (discriminantValue + ('\' for field \'' + (discriminantField + '\''))));
+					}
+				},
+				A2($elm$json$Json$Decode$field, discriminantField, $elm$json$Json$Decode$string)),
+			$dillonkearns$elm_ts_json$Internal$TypeReducer$union(
+				A2(
+					$elm$core$List$map,
+					function (_v1) {
+						var discriminantValue = _v1.a;
+						var variantDecoder = _v1.b;
+						return A2(
+							$dillonkearns$elm_ts_json$Internal$TypeReducer$intersect,
+							$dillonkearns$elm_ts_json$Internal$TsJsonType$TypeObject(
+								_List_fromArray(
+									[
+										_Utils_Tuple3(
+										$dillonkearns$elm_ts_json$Internal$TsJsonType$Required,
+										discriminantField,
+										$dillonkearns$elm_ts_json$Internal$TsJsonType$Literal(
+											$elm$json$Json$Encode$string(discriminantValue)))
+									])),
+							$dillonkearns$elm_ts_json$TsJson$Decode$tsType(variantDecoder));
+					},
+					decoders)));
+	});
+var $dillonkearns$elm_ts_json$TsJson$Decode$fail = function (message) {
+	return A2(
+		$dillonkearns$elm_ts_json$TsJson$Internal$Decode$Decoder,
+		$elm$json$Json$Decode$fail(message),
+		$dillonkearns$elm_ts_json$Internal$TsJsonType$Unknown);
+};
+var $dillonkearns$elm_ts_json$TsJson$Decode$field = F2(
+	function (fieldName, _v0) {
+		var innerDecoder = _v0.a;
+		var innerType = _v0.b;
+		return A2(
+			$dillonkearns$elm_ts_json$TsJson$Internal$Decode$Decoder,
+			A2($elm$json$Json$Decode$field, fieldName, innerDecoder),
+			$dillonkearns$elm_ts_json$Internal$TsJsonType$TypeObject(
+				_List_fromArray(
+					[
+						_Utils_Tuple3($dillonkearns$elm_ts_json$Internal$TsJsonType$Required, fieldName, innerType)
+					])));
+	});
+var $author$project$Gen$Sound$fromString = function (string) {
+	switch (string) {
+		case 'error.mp3':
+			return $elm$core$Maybe$Just($author$project$Gen$Sound$Error);
+		case 'move.mp3':
+			return $elm$core$Maybe$Just($author$project$Gen$Sound$Move);
+		case 'pass.mp3':
+			return $elm$core$Maybe$Just($author$project$Gen$Sound$Pass);
+		case 'win.mp3':
+			return $elm$core$Maybe$Just($author$project$Gen$Sound$Win);
+		default:
+			return $elm$core$Maybe$Nothing;
+	}
+};
+var $dillonkearns$elm_ts_json$TsJson$Decode$string = A2($dillonkearns$elm_ts_json$TsJson$Internal$Decode$Decoder, $elm$json$Json$Decode$string, $dillonkearns$elm_ts_json$Internal$TsJsonType$String);
+var $dillonkearns$elm_ts_json$TsJson$Decode$succeed = function (value_) {
+	return A2(
+		$dillonkearns$elm_ts_json$TsJson$Internal$Decode$Decoder,
+		$elm$json$Json$Decode$succeed(value_),
+		$dillonkearns$elm_ts_json$Internal$TsJsonType$Unknown);
+};
+var $author$project$PortDefinition$toElm = A2(
+	$dillonkearns$elm_ts_json$TsJson$Decode$discriminatedUnion,
+	'type',
+	_List_fromArray(
+		[
+			_Utils_Tuple2(
+			'soundEnded',
+			A2(
+				$dillonkearns$elm_ts_json$TsJson$Decode$andMap,
+				A2(
+					$dillonkearns$elm_ts_json$TsJson$Decode$field,
+					'sound',
+					A2(
+						$dillonkearns$elm_ts_json$TsJson$Decode$andThen,
+						$dillonkearns$elm_ts_json$TsJson$Decode$andThenInit(
+							function (string) {
+								return A2(
+									$elm$core$Maybe$withDefault,
+									$dillonkearns$elm_ts_json$TsJson$Decode$fail('Unkown sound ended: ' + string),
+									A2(
+										$elm$core$Maybe$map,
+										$dillonkearns$elm_ts_json$TsJson$Decode$succeed,
+										$author$project$Gen$Sound$fromString(string)));
+							}),
+						$dillonkearns$elm_ts_json$TsJson$Decode$string)),
+				$dillonkearns$elm_ts_json$TsJson$Decode$succeed($author$project$PortDefinition$SoundEnded)))
+		]));
+var $author$project$PortDefinition$interop = {flags: $author$project$PortDefinition$flags, fromElm: $author$project$PortDefinition$fromElm, toElm: $author$project$PortDefinition$toElm};
+var $author$project$Port$interopFromElm = _Platform_outgoingPort('interopFromElm', $elm$core$Basics$identity);
+var $author$project$Port$fromElm = function (value) {
+	return $author$project$Port$interopFromElm(
+		A3($elm$core$Basics$apR, $author$project$PortDefinition$interop.fromElm, $dillonkearns$elm_ts_json$TsJson$Encode$encoder, value));
+};
+var $elm$core$Basics$negate = function (n) {
+	return -n;
+};
+var $author$project$Game$Level$lvl5 = {
+	board: $elm$core$Dict$fromList(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				_Utils_Tuple2(2, 2),
+				-1),
+				_Utils_Tuple2(
+				_Utils_Tuple2(0, 0),
+				1),
+				_Utils_Tuple2(
+				_Utils_Tuple2(0, 1),
+				1),
+				_Utils_Tuple2(
+				_Utils_Tuple2(2, 0),
+				2),
+				_Utils_Tuple2(
+				_Utils_Tuple2(2, 1),
+				2),
+				_Utils_Tuple2(
+				_Utils_Tuple2(1, 1),
+				3),
+				_Utils_Tuple2(
+				_Utils_Tuple2(1, 2),
+				4)
+			])),
+	goal: _Utils_Tuple2(2, -1),
+	height: 3,
+	tiles: $elm$core$Dict$fromList(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				-1,
+				{
+					size: _Utils_Tuple2(1, 1),
+					topLeft: _Utils_Tuple2(2, 2)
+				}),
+				_Utils_Tuple2(
+				1,
+				{
+					size: _Utils_Tuple2(1, 2),
+					topLeft: _Utils_Tuple2(0, 0)
+				}),
+				_Utils_Tuple2(
+				2,
+				{
+					size: _Utils_Tuple2(1, 2),
+					topLeft: _Utils_Tuple2(2, 0)
+				}),
+				_Utils_Tuple2(
+				3,
+				{
+					size: _Utils_Tuple2(1, 1),
+					topLeft: _Utils_Tuple2(1, 1)
+				}),
+				_Utils_Tuple2(
+				4,
+				{
+					size: _Utils_Tuple2(1, 1),
+					topLeft: _Utils_Tuple2(1, 2)
+				})
+			])),
+	width: 3
+};
+var $author$project$Main$init = function (_v0) {
+	return _Utils_Tuple2(
+		{game: $author$project$Game$Level$lvl5},
+		$author$project$Port$fromElm(
+			$author$project$PortDefinition$RegisterSounds($author$project$Gen$Sound$asList)));
+};
+var $author$project$Main$Received = function (a) {
+	return {$: 'Received', a: a};
+};
+var $elm$core$Platform$Sub$map = _Platform_map;
+var $elm$json$Json$Decode$decodeValue = _Json_run;
+var $author$project$Port$interopToElm = _Platform_incomingPort('interopToElm', $elm$json$Json$Decode$value);
+var $author$project$Port$toElm = $author$project$Port$interopToElm(
+	$elm$json$Json$Decode$decodeValue(
+		$dillonkearns$elm_ts_json$TsJson$Decode$decoder($author$project$PortDefinition$interop.toElm)));
+var $author$project$Main$subscriptions = function (_v0) {
+	return A2($elm$core$Platform$Sub$map, $author$project$Main$Received, $author$project$Port$toElm);
+};
+var $author$project$PortDefinition$PlaySound = function (a) {
+	return {$: 'PlaySound', a: a};
+};
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
+var $author$project$Game$gameWon = function (game) {
+	return _Utils_eq(
+		$elm$core$Maybe$Just(-1),
+		A2($elm$core$Dict$get, game.goal, game.board));
+};
+var $elm$core$Debug$log = _Debug_log;
+var $elm$core$Maybe$andThen = F2(
+	function (callback, maybeValue) {
+		if (maybeValue.$ === 'Just') {
+			var value = maybeValue.a;
+			return callback(value);
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
+var $elm$core$Dict$foldl = F3(
+	function (func, acc, dict) {
+		foldl:
+		while (true) {
+			if (dict.$ === 'RBEmpty_elm_builtin') {
+				return acc;
+			} else {
+				var key = dict.b;
+				var value = dict.c;
+				var left = dict.d;
+				var right = dict.e;
+				var $temp$func = func,
+					$temp$acc = A3(
+					func,
+					key,
+					value,
+					A3($elm$core$Dict$foldl, func, acc, left)),
+					$temp$dict = right;
+				func = $temp$func;
+				acc = $temp$acc;
+				dict = $temp$dict;
+				continue foldl;
+			}
+		}
+	});
+var $elm$core$Dict$filter = F2(
+	function (isGood, dict) {
+		return A3(
+			$elm$core$Dict$foldl,
+			F3(
+				function (k, v, d) {
+					return A2(isGood, k, v) ? A3($elm$core$Dict$insert, k, v, d) : d;
+				}),
+			$elm$core$Dict$empty,
+			dict);
+	});
+var $elm$core$Tuple$mapBoth = F3(
+	function (funcA, funcB, _v0) {
+		var x = _v0.a;
+		var y = _v0.b;
+		return _Utils_Tuple2(
+			funcA(x),
+			funcB(y));
 	});
 var $author$project$Game$move = F2(
 	function (targetId, game) {
@@ -5952,20 +7027,52 @@ var $author$project$Game$move = F2(
 				},
 				movements));
 	});
+var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$update = F2(
 	function (msg, model) {
-		var _int = msg.a;
-		return _Utils_Tuple2(
-			{
-				game: A2(
-					$elm$core$Maybe$withDefault,
-					model.game,
-					A2($author$project$Game$move, _int, model.game))
-			},
-			$elm$core$Platform$Cmd$none);
+		var withNoCmd = function (a) {
+			return _Utils_Tuple2(a, $elm$core$Platform$Cmd$none);
+		};
+		if (msg.$ === 'MoveBlock') {
+			var _int = msg.a;
+			var _v1 = A2($author$project$Game$move, _int, model.game);
+			if (_v1.$ === 'Just') {
+				var game = _v1.a;
+				return _Utils_Tuple2(
+					{game: game},
+					$author$project$Game$gameWon(game) ? $elm$core$Platform$Cmd$batch(
+						_List_fromArray(
+							[
+								$author$project$Port$fromElm(
+								$author$project$PortDefinition$PlaySound(
+									{looping: false, sound: $author$project$Gen$Sound$Move})),
+								$author$project$Port$fromElm(
+								$author$project$PortDefinition$PlaySound(
+									{looping: false, sound: $author$project$Gen$Sound$Win}))
+							])) : $author$project$Port$fromElm(
+						$author$project$PortDefinition$PlaySound(
+							{looping: false, sound: $author$project$Gen$Sound$Move})));
+			} else {
+				return _Utils_Tuple2(
+					model,
+					$author$project$Port$fromElm(
+						$author$project$PortDefinition$PlaySound(
+							{looping: false, sound: $author$project$Gen$Sound$Pass})));
+			}
+		} else {
+			var result = msg.a;
+			if (result.$ === 'Ok') {
+				var sound = result.a.a;
+				return withNoCmd(model);
+			} else {
+				var error = result.a;
+				var _v3 = A2($elm$core$Debug$log, 'received invalid json', error);
+				return withNoCmd(model);
+			}
+		}
 	});
-var $author$project$Main$Move = function (a) {
-	return {$: 'Move', a: a};
+var $author$project$Main$MoveBlock = function (a) {
+	return {$: 'MoveBlock', a: a};
 };
 var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
@@ -5985,7 +7092,6 @@ var $Orasund$elm_layout$Layout$el = F2(
 			_List_fromArray(
 				[content]));
 	});
-var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
 		return A2(
@@ -6126,7 +7232,6 @@ var $elm$virtual_dom$VirtualDom$keyedNode = function (tag) {
 };
 var $elm$html$Html$Keyed$node = $elm$virtual_dom$VirtualDom$keyedNode;
 var $elm$core$Basics$not = _Basics_not;
-var $elm$core$List$sortBy = _List_sortBy;
 var $author$project$View$square = function (attrs) {
 	return A2($Orasund$elm_layout$Layout$el, attrs, $Orasund$elm_layout$Layout$none);
 };
@@ -6423,7 +7528,7 @@ var $author$project$View$toHtml = F2(
 	});
 var $author$project$Main$view = function (model) {
 	return {
-		body: A2($author$project$View$toHtml, $author$project$Main$Move, model.game),
+		body: A2($author$project$View$toHtml, $author$project$Main$MoveBlock, model.game),
 		title: 'Test'
 	};
 };

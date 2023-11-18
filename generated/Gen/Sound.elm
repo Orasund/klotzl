@@ -8,23 +8,35 @@ module Gen.Sound exposing (Sound(..), toString, fromString, asList)
     
 {-| Reprentation of Sound
 -}
-type Sound = ClickButton
+type Sound = Error | Move | Pass | Win
 
 {-| List of all playable sounds
 -}
 asList : List Sound
 asList =
-    [ ClickButton ]
+    [ Error, Move, Pass, Win ]
 
 {-| returns the path to the sound
 -}
 toString : Sound -> String
 toString sound =
     case sound of
-      ClickButton -> "ClickButton.mp3"
+      Error -> "error.mp3"
+
+      Move -> "move.mp3"
+
+      Pass -> "pass.mp3"
+
+      Win -> "win.mp3"
 
 fromString : String -> Maybe Sound
 fromString string =
     case string of
-      "ClickButton.mp3" -> Just ClickButton
+      "error.mp3" -> Just Error
+
+      "move.mp3" -> Just Move
+
+      "pass.mp3" -> Just Pass
+
+      "win.mp3" -> Just Win
       _ -> Nothing   

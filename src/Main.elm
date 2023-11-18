@@ -3,7 +3,11 @@ module Main exposing (..)
 import Browser
 import Game exposing (Game)
 import Game.Level
+import Gen.Sound exposing (Sound(..))
 import Html exposing (Html)
+import Json.Decode exposing (Value)
+import Port
+import PortDefinition exposing (FromElm(..), ToElm(..))
 import View
 
 
@@ -12,7 +16,8 @@ type alias Model =
 
 
 type Msg
-    = Move Int
+    = MoveBlock Int
+    | Received (Result Json.Decode.Error ToElm)
 
 
 main : Program () Model Msg
@@ -27,7 +32,9 @@ main =
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { game = Game.Level.lvl5 }, Cmd.none )
+    ( { game = Game.Level.lvl5 }
+    , Gen.Sound.asList |> RegisterSounds |> Port.fromElm
+    )
 
 
 view :
@@ -39,24 +46,59 @@ view :
 view model =
     { title = "Test"
     , body =
-        View.toHtml Move
+        View.toHtml MoveBlock
             model.game
     }
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
+    let
+        withNoCmd a =
+            ( a, Cmd.none )
+    in
     case msg of
-        Move int ->
-            ( { game =
-                    model.game
-                        |> Game.move int
-                        |> Maybe.withDefault model.game
-              }
-            , Cmd.none
-            )
+        MoveBlock int ->
+            case
+                model.game
+                    |> Game.move int
+            of
+                Just game ->
+                    ( { game =
+                            game
+                      }
+                    , if Game.gameWon game then
+                        [ PlaySound { sound = Move, looping = False }
+                            |> Port.fromElm
+                        , PlaySound { sound = Win, looping = False }
+                            |> Port.fromElm
+                        ]
+                            |> Cmd.batch
+
+                      else
+                        PlaySound { sound = Move, looping = False }
+                            |> Port.fromElm
+                    )
+
+                Nothing ->
+                    ( model
+                    , PlaySound { sound = Pass, looping = False }
+                        |> Port.fromElm
+                    )
+
+        Received result ->
+            case result of
+                Ok (SoundEnded sound) ->
+                    model |> withNoCmd
+
+                Err error ->
+                    let
+                        _ =
+                            Debug.log "received invalid json" error
+                    in
+                    model |> withNoCmd
 
 
 subscriptions : Model -> Sub Msg
-subscriptions model =
-    Sub.none
+subscriptions _ =
+    Port.toElm |> Sub.map Received
