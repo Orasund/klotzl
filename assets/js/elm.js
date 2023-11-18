@@ -6963,7 +6963,10 @@ var $author$project$Game$Level$lvl4 = {
 				3),
 				_Utils_Tuple2(
 				_Utils_Tuple2(0, 2),
-				4)
+				4),
+				_Utils_Tuple2(
+				_Utils_Tuple2(2, 0),
+				5)
 			])),
 	goal: _Utils_Tuple2(2, -1),
 	height: 3,
@@ -6999,6 +7002,12 @@ var $author$project$Game$Level$lvl4 = {
 				{
 					size: _Utils_Tuple2(1, 1),
 					topLeft: _Utils_Tuple2(0, 2)
+				}),
+				_Utils_Tuple2(
+				5,
+				{
+					size: _Utils_Tuple2(1, 1),
+					topLeft: _Utils_Tuple2(2, 0)
 				})
 			])),
 	width: 3
