@@ -8,7 +8,8 @@
     "generateSound": "node scripts/generateSoundElm.js",
     "generatePorts": "elm-ts-interop --output elm.d.ts --definition-dir ports --definition-module PortDefinition",
     "build": "elm make src/Main.elm --output=assets/js/elm.js && node scripts/createZip.js",
-    "dev": "elm-live src/Main.elm -- --output=assets/js/elm.js"
+    "dev": "elm-live src/Main.elm -- --output=assets/js/elm.js",
+    "css": "css-in-elm build src/style.css generated/Css.elm"
   },
   "author": "",
   "license": "BSD-3-Clause",
@@ -17,5 +18,8 @@
     "elm-live": "^4.0.2",
     "elm-ts-interop": "^0.0.8",
     "zip-lib": "^0.7.3"
+  },
+  "dependencies": {
+    "@ryannhg/css-in-elm": "^1.0.0"
   }
 }

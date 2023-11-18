@@ -1,100 +1,40 @@
-@font-face {
-    font-family: "NotoEmoji";
-    src: url("fonts/NotoEmoji-Regular.ttf");
-}
-
-@font-face {
-    font-family: "NotoColorEmoji";
-    src: url("fonts/NotoColorEmoji-Regular.ttf");
-}
-
 :root {
-    --primary-color: #ffc608;
-    --secondary-color: #6f7ce3;
-
-    --background-color: white;
-
-
-    --small-space: calc(var(--space) / 2);
-    --space: 16px;
-    --big-space: calc(var(--space) * 2);
-    --normal-font-size: 16px;
-    --small-font-size: calc(var(--normal-font-size) * 0.5);
-    --big-font-size: calc(var(--normal-font-size) * 2);
-    --title-font-size: calc(var(--normal-font-size) * 4);
+    --red: #ff7265;
+    --orange: #fcad56;
+    --yellow: #f8d843;
+    --green: #6dce8a;
+    --cyan: #8bc6c6;
+    --blue: #a3bef3;
+    --violette: #c89ccc;
+    --purple: #e7709b;
+    --dark-gray: #343232;
 }
 
 html {
-    margin: 0;
-    padding: 0;
-
-    font-family: sans-serif, "NotoColorEmoji";
-    color: var(--font-color);
+    height: 100%;
 }
 
 body {
+    background-color: black;
     width: 100%;
     height: 100%;
     margin: 0;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: white;
 }
 
-.container {
-    position: relative;
-    background-color: var(--background-color);
-    border-radius: var(--space);
-    box-sizing: border-box;
-    overflow: hidden;
+
+.bottom-left {
+    border-bottom-left-radius: 25px;
 }
 
-.content {
-    padding: var(--space);
+.top-left {
+    border-top-left-radius: 25px;
 }
 
-button {
-    border: 0;
-    background-color: var(--primary-color);
-    border-radius: var(--small-space);
-    padding: var(--small-space) var(--space);
+.top-right {
+    border-top-right-radius: 25px;
 }
 
-button:hover,
-button:focus {
-    filter: brightness(0.9);
-}
+.bottom-right {
 
-button:active {
-    filter: brightness(0.75);
-}
-
-/***************************************************
- * UTILITY CLASSES
- ***************************************************/
-
-.font-size-normal {
-    font-size: var(--normal-font-size);
-}
-
-.font-size-small {
-    font-size: var(--small-font-size);
-}
-
-.font-size-big {
-    font-size: var(--big-font-size);
-}
-
-.font-size-title {
-    font-size: var(--title-font-size);
-}
-
-.emoji-font {
-    font-family: "NotoColorEmoji";
-}
-
-.emoji-color-font {
-    font-family: "NotoColorEmoji";
+    border-bottom-right-radius: 25px;
 }
