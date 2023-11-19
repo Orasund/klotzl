@@ -6783,40 +6783,137 @@ var $author$project$Port$fromElm = function (value) {
 	return $author$project$Port$interopFromElm(
 		A3($elm$core$Basics$apR, $author$project$PortDefinition$interop.fromElm, $dillonkearns$elm_ts_json$TsJson$Encode$encoder, value));
 };
+var $elm$core$Dict$foldl = F3(
+	function (func, acc, dict) {
+		foldl:
+		while (true) {
+			if (dict.$ === 'RBEmpty_elm_builtin') {
+				return acc;
+			} else {
+				var key = dict.b;
+				var value = dict.c;
+				var left = dict.d;
+				var right = dict.e;
+				var $temp$func = func,
+					$temp$acc = A3(
+					func,
+					key,
+					value,
+					A3($elm$core$Dict$foldl, func, acc, left)),
+					$temp$dict = right;
+				func = $temp$func;
+				acc = $temp$acc;
+				dict = $temp$dict;
+				continue foldl;
+			}
+		}
+	});
+var $elm$core$Dict$map = F2(
+	function (func, dict) {
+		if (dict.$ === 'RBEmpty_elm_builtin') {
+			return $elm$core$Dict$RBEmpty_elm_builtin;
+		} else {
+			var color = dict.a;
+			var key = dict.b;
+			var value = dict.c;
+			var left = dict.d;
+			var right = dict.e;
+			return A5(
+				$elm$core$Dict$RBNode_elm_builtin,
+				color,
+				key,
+				A2(func, key, value),
+				A2($elm$core$Dict$map, func, left),
+				A2($elm$core$Dict$map, func, right));
+		}
+	});
+var $elm$core$Basics$min = F2(
+	function (x, y) {
+		return (_Utils_cmp(x, y) < 0) ? x : y;
+	});
+var $author$project$Game$fromBoard = function (args) {
+	var _v0 = A3(
+		$elm$core$List$foldl,
+		F2(
+			function (_v1, dim) {
+				var x = _v1.a;
+				var y = _v1.b;
+				return {
+					height: A2($elm$core$Basics$max, dim.height, y + 1),
+					width: A2($elm$core$Basics$max, dim.width, x + 1)
+				};
+			}),
+		{height: 0, width: 0},
+		$elm$core$Dict$keys(args.board));
+	var width = _v0.width;
+	var height = _v0.height;
+	return {
+		board: args.board,
+		goal: args.goal,
+		height: height,
+		tiles: A2(
+			$elm$core$Dict$map,
+			F2(
+				function (_v3, tile) {
+					return {
+						size: _Utils_Tuple2((tile.max.x - tile.min.x) + 1, (tile.max.y - tile.min.y) + 1),
+						topLeft: _Utils_Tuple2(tile.min.x, tile.min.y)
+					};
+				}),
+			A3(
+				$elm$core$Dict$foldl,
+				F2(
+					function (_v2, _int) {
+						var x = _v2.a;
+						var y = _v2.b;
+						return A2(
+							$elm$core$Dict$update,
+							_int,
+							function (maybe) {
+								return $elm$core$Maybe$Just(
+									function (tile) {
+										return {
+											max: {
+												x: A2($elm$core$Basics$max, tile.max.x, x),
+												y: A2($elm$core$Basics$max, tile.max.y, y)
+											},
+											min: {
+												x: A2($elm$core$Basics$min, tile.min.x, x),
+												y: A2($elm$core$Basics$min, tile.min.y, y)
+											}
+										};
+									}(
+										A2(
+											$elm$core$Maybe$withDefault,
+											{
+												max: {x: x, y: y},
+												min: {x: x, y: y}
+											},
+											maybe)));
+							});
+					}),
+				$elm$core$Dict$empty,
+				args.board)),
+		width: width
+	};
+};
 var $elm$core$Basics$negate = function (n) {
 	return -n;
 };
-var $author$project$Game$Level$lvl1 = {
-	board: $elm$core$Dict$fromList(
-		_List_fromArray(
-			[
-				_Utils_Tuple2(
-				_Utils_Tuple2(1, 0),
-				-1),
-				_Utils_Tuple2(
-				_Utils_Tuple2(0, 0),
-				1)
-			])),
-	goal: _Utils_Tuple2(1, -1),
-	height: 1,
-	tiles: $elm$core$Dict$fromList(
-		_List_fromArray(
-			[
-				_Utils_Tuple2(
-				-1,
-				{
-					size: _Utils_Tuple2(1, 1),
-					topLeft: _Utils_Tuple2(1, 0)
-				}),
-				_Utils_Tuple2(
-				1,
-				{
-					size: _Utils_Tuple2(1, 1),
-					topLeft: _Utils_Tuple2(0, 0)
-				})
-			])),
-	width: 2
-};
+var $author$project$Game$Level$lvl1 = $author$project$Game$fromBoard(
+	{
+		board: $elm$core$Dict$fromList(
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					_Utils_Tuple2(1, 0),
+					-1),
+					_Utils_Tuple2(
+					_Utils_Tuple2(0, 0),
+					1)
+				])),
+		goal: _Utils_Tuple2(1, -1)
+	});
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
 		{
@@ -6859,223 +6956,104 @@ var $author$project$Game$gameWon = function (game) {
 		$elm$core$Maybe$Just(-1),
 		A2($elm$core$Dict$get, game.goal, game.board));
 };
-var $author$project$Game$Level$lvl2 = {
-	board: $elm$core$Dict$fromList(
-		_List_fromArray(
-			[
-				_Utils_Tuple2(
-				_Utils_Tuple2(1, 1),
-				-1),
-				_Utils_Tuple2(
-				_Utils_Tuple2(0, 0),
-				1),
-				_Utils_Tuple2(
-				_Utils_Tuple2(0, 1),
-				2)
-			])),
-	goal: _Utils_Tuple2(1, -1),
-	height: 2,
-	tiles: $elm$core$Dict$fromList(
-		_List_fromArray(
-			[
-				_Utils_Tuple2(
-				-1,
-				{
-					size: _Utils_Tuple2(1, 1),
-					topLeft: _Utils_Tuple2(1, 1)
-				}),
-				_Utils_Tuple2(
-				1,
-				{
-					size: _Utils_Tuple2(1, 1),
-					topLeft: _Utils_Tuple2(0, 0)
-				}),
-				_Utils_Tuple2(
-				2,
-				{
-					size: _Utils_Tuple2(1, 1),
-					topLeft: _Utils_Tuple2(0, 1)
-				})
-			])),
-	width: 2
-};
-var $author$project$Game$Level$lvl3 = {
-	board: $elm$core$Dict$fromList(
-		_List_fromArray(
-			[
-				_Utils_Tuple2(
-				_Utils_Tuple2(1, 2),
-				-1),
-				_Utils_Tuple2(
-				_Utils_Tuple2(0, 0),
-				1),
-				_Utils_Tuple2(
-				_Utils_Tuple2(0, 1),
-				1),
-				_Utils_Tuple2(
-				_Utils_Tuple2(0, 2),
-				2)
-			])),
-	goal: _Utils_Tuple2(1, -1),
-	height: 3,
-	tiles: $elm$core$Dict$fromList(
-		_List_fromArray(
-			[
-				_Utils_Tuple2(
-				-1,
-				{
-					size: _Utils_Tuple2(1, 1),
-					topLeft: _Utils_Tuple2(1, 2)
-				}),
-				_Utils_Tuple2(
-				1,
-				{
-					size: _Utils_Tuple2(1, 2),
-					topLeft: _Utils_Tuple2(0, 0)
-				}),
-				_Utils_Tuple2(
-				2,
-				{
-					size: _Utils_Tuple2(1, 1),
-					topLeft: _Utils_Tuple2(0, 2)
-				})
-			])),
-	width: 2
-};
-var $author$project$Game$Level$lvl4 = {
-	board: $elm$core$Dict$fromList(
-		_List_fromArray(
-			[
-				_Utils_Tuple2(
-				_Utils_Tuple2(2, 2),
-				-1),
-				_Utils_Tuple2(
-				_Utils_Tuple2(1, 0),
-				1),
-				_Utils_Tuple2(
-				_Utils_Tuple2(1, 1),
-				1),
-				_Utils_Tuple2(
-				_Utils_Tuple2(0, 0),
-				2),
-				_Utils_Tuple2(
-				_Utils_Tuple2(0, 1),
-				3),
-				_Utils_Tuple2(
-				_Utils_Tuple2(0, 2),
-				4),
-				_Utils_Tuple2(
-				_Utils_Tuple2(2, 0),
-				5)
-			])),
-	goal: _Utils_Tuple2(2, -1),
-	height: 3,
-	tiles: $elm$core$Dict$fromList(
-		_List_fromArray(
-			[
-				_Utils_Tuple2(
-				-1,
-				{
-					size: _Utils_Tuple2(1, 1),
-					topLeft: _Utils_Tuple2(2, 2)
-				}),
-				_Utils_Tuple2(
-				1,
-				{
-					size: _Utils_Tuple2(1, 2),
-					topLeft: _Utils_Tuple2(1, 0)
-				}),
-				_Utils_Tuple2(
-				2,
-				{
-					size: _Utils_Tuple2(1, 1),
-					topLeft: _Utils_Tuple2(0, 0)
-				}),
-				_Utils_Tuple2(
-				3,
-				{
-					size: _Utils_Tuple2(1, 1),
-					topLeft: _Utils_Tuple2(0, 1)
-				}),
-				_Utils_Tuple2(
-				4,
-				{
-					size: _Utils_Tuple2(1, 1),
-					topLeft: _Utils_Tuple2(0, 2)
-				}),
-				_Utils_Tuple2(
-				5,
-				{
-					size: _Utils_Tuple2(1, 1),
-					topLeft: _Utils_Tuple2(2, 0)
-				})
-			])),
-	width: 3
-};
-var $author$project$Game$Level$lvl5 = {
-	board: $elm$core$Dict$fromList(
-		_List_fromArray(
-			[
-				_Utils_Tuple2(
-				_Utils_Tuple2(2, 2),
-				-1),
-				_Utils_Tuple2(
-				_Utils_Tuple2(0, 0),
-				1),
-				_Utils_Tuple2(
-				_Utils_Tuple2(0, 1),
-				1),
-				_Utils_Tuple2(
-				_Utils_Tuple2(2, 0),
-				2),
-				_Utils_Tuple2(
-				_Utils_Tuple2(2, 1),
-				2),
-				_Utils_Tuple2(
-				_Utils_Tuple2(1, 1),
-				3),
-				_Utils_Tuple2(
-				_Utils_Tuple2(1, 2),
-				4)
-			])),
-	goal: _Utils_Tuple2(2, -1),
-	height: 3,
-	tiles: $elm$core$Dict$fromList(
-		_List_fromArray(
-			[
-				_Utils_Tuple2(
-				-1,
-				{
-					size: _Utils_Tuple2(1, 1),
-					topLeft: _Utils_Tuple2(2, 2)
-				}),
-				_Utils_Tuple2(
-				1,
-				{
-					size: _Utils_Tuple2(1, 2),
-					topLeft: _Utils_Tuple2(0, 0)
-				}),
-				_Utils_Tuple2(
-				2,
-				{
-					size: _Utils_Tuple2(1, 2),
-					topLeft: _Utils_Tuple2(2, 0)
-				}),
-				_Utils_Tuple2(
-				3,
-				{
-					size: _Utils_Tuple2(1, 1),
-					topLeft: _Utils_Tuple2(1, 1)
-				}),
-				_Utils_Tuple2(
-				4,
-				{
-					size: _Utils_Tuple2(1, 1),
-					topLeft: _Utils_Tuple2(1, 2)
-				})
-			])),
-	width: 3
-};
+var $author$project$Game$Level$lvl2 = $author$project$Game$fromBoard(
+	{
+		board: $elm$core$Dict$fromList(
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					_Utils_Tuple2(1, 1),
+					-1),
+					_Utils_Tuple2(
+					_Utils_Tuple2(0, 0),
+					1),
+					_Utils_Tuple2(
+					_Utils_Tuple2(0, 1),
+					2)
+				])),
+		goal: _Utils_Tuple2(1, -1)
+	});
+var $author$project$Game$Level$lvl3 = $author$project$Game$fromBoard(
+	{
+		board: $elm$core$Dict$fromList(
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					_Utils_Tuple2(1, 2),
+					-1),
+					_Utils_Tuple2(
+					_Utils_Tuple2(0, 0),
+					1),
+					_Utils_Tuple2(
+					_Utils_Tuple2(0, 1),
+					2),
+					_Utils_Tuple2(
+					_Utils_Tuple2(0, 2),
+					3),
+					_Utils_Tuple2(
+					_Utils_Tuple2(1, 0),
+					4)
+				])),
+		goal: _Utils_Tuple2(1, -1)
+	});
+var $author$project$Game$Level$lvl4 = $author$project$Game$fromBoard(
+	{
+		board: $elm$core$Dict$fromList(
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					_Utils_Tuple2(2, 2),
+					-1),
+					_Utils_Tuple2(
+					_Utils_Tuple2(1, 0),
+					1),
+					_Utils_Tuple2(
+					_Utils_Tuple2(1, 1),
+					1),
+					_Utils_Tuple2(
+					_Utils_Tuple2(0, 0),
+					2),
+					_Utils_Tuple2(
+					_Utils_Tuple2(0, 1),
+					3),
+					_Utils_Tuple2(
+					_Utils_Tuple2(0, 2),
+					4),
+					_Utils_Tuple2(
+					_Utils_Tuple2(2, 0),
+					5)
+				])),
+		goal: _Utils_Tuple2(2, -1)
+	});
+var $author$project$Game$Level$lvl5 = $author$project$Game$fromBoard(
+	{
+		board: $elm$core$Dict$fromList(
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					_Utils_Tuple2(2, 2),
+					-1),
+					_Utils_Tuple2(
+					_Utils_Tuple2(0, 0),
+					1),
+					_Utils_Tuple2(
+					_Utils_Tuple2(0, 1),
+					1),
+					_Utils_Tuple2(
+					_Utils_Tuple2(2, 0),
+					2),
+					_Utils_Tuple2(
+					_Utils_Tuple2(2, 1),
+					2),
+					_Utils_Tuple2(
+					_Utils_Tuple2(1, 1),
+					3),
+					_Utils_Tuple2(
+					_Utils_Tuple2(1, 2),
+					4)
+				])),
+		goal: _Utils_Tuple2(2, -1)
+	});
 var $author$project$Game$Level$get = function (_int) {
 	switch (_int) {
 		case 1:
@@ -7093,31 +7071,6 @@ var $author$project$Game$Level$get = function (_int) {
 	}
 };
 var $elm$core$Debug$log = _Debug_log;
-var $elm$core$Dict$foldl = F3(
-	function (func, acc, dict) {
-		foldl:
-		while (true) {
-			if (dict.$ === 'RBEmpty_elm_builtin') {
-				return acc;
-			} else {
-				var key = dict.b;
-				var value = dict.c;
-				var left = dict.d;
-				var right = dict.e;
-				var $temp$func = func,
-					$temp$acc = A3(
-					func,
-					key,
-					value,
-					A3($elm$core$Dict$foldl, func, acc, left)),
-					$temp$dict = right;
-				func = $temp$func;
-				acc = $temp$acc;
-				dict = $temp$dict;
-				continue foldl;
-			}
-		}
-	});
 var $elm$core$Dict$filter = F2(
 	function (isGood, dict) {
 		return A3(
@@ -7307,7 +7260,7 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							game: $author$project$Game$Level$get(model.currentLevel + 1)
+							game: $author$project$Game$Level$get(model.currentLevel)
 						}),
 					$elm$core$Platform$Cmd$none);
 		}

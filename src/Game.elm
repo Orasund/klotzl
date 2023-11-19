@@ -1,6 +1,7 @@
 module Game exposing (..)
 
 import Dict exposing (Dict)
+import Set
 
 
 type alias Game =
@@ -15,6 +16,71 @@ type alias Game =
             , size : ( Int, Int )
             }
     }
+
+
+fromBoard :
+    { board : Dict ( Int, Int ) Int
+    , goal : ( Int, Int )
+    }
+    -> Game
+fromBoard args =
+    let
+        { width, height } =
+            args.board
+                |> Dict.keys
+                |> List.foldl
+                    (\( x, y ) dim ->
+                        { width = max dim.width (x + 1)
+                        , height = max dim.height (y + 1)
+                        }
+                    )
+                    { width = 0, height = 0 }
+    in
+    { board = args.board
+    , width = width
+    , height = height
+    , goal = args.goal
+    , tiles =
+        args.board
+            |> Dict.foldl
+                (\( x, y ) int ->
+                    Dict.update int
+                        (\maybe ->
+                            maybe
+                                |> Maybe.withDefault
+                                    { min = { x = x, y = y }
+                                    , max = { x = x, y = y }
+                                    }
+                                |> (\tile ->
+                                        { min =
+                                            { x = min tile.min.x x
+                                            , y = min tile.min.y y
+                                            }
+                                        , max =
+                                            { x = max tile.max.x x
+                                            , y = max tile.max.y y
+                                            }
+                                        }
+                                   )
+                                |> Just
+                        )
+                )
+                Dict.empty
+            |> Dict.map
+                (\_ tile ->
+                    { topLeft = ( tile.min.x, tile.min.y )
+                    , size =
+                        ( tile.max.x - tile.min.x + 1
+                        , tile.max.y - tile.min.y + 1
+                        )
+                    }
+                )
+    }
+
+
+setBoard : Dict ( Int, Int ) Int -> Game -> Game
+setBoard board game =
+    fromBoard { board = board, goal = game.goal }
 
 
 test : Game

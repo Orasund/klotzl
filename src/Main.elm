@@ -129,7 +129,7 @@ update msg model =
 
         LoadGame ->
             ( { model
-                | game = Game.Level.get (model.currentLevel + 1)
+                | game = Game.Level.get model.currentLevel
               }
             , Cmd.none
             )
