@@ -5,7 +5,7 @@ import Game exposing (Game)
 import Game.Level
 import Gen.Sound exposing (Sound(..))
 import Html exposing (Html)
-import Json.Decode exposing (Value)
+import Json.Decode
 import Port
 import PortDefinition exposing (FromElm(..), ToElm(..))
 import Process
@@ -16,7 +16,7 @@ import View
 type alias Model =
     { game : Maybe Game
     , currentLevel : Int
-    , transitionTo : Maybe Game
+    , transitioning : Bool
     }
 
 
@@ -41,7 +41,7 @@ init : () -> ( Model, Cmd Msg )
 init () =
     ( { game = Just Game.Level.lvl1
       , currentLevel = 1
-      , transitionTo = Nothing
+      , transitioning = False
       }
     , Gen.Sound.asList |> RegisterSounds |> Port.fromElm
     )
@@ -57,8 +57,10 @@ view model =
     { title = "Test"
     , body =
         model.game
-            |> Maybe.map (View.toHtml MoveBlock)
-            |> Maybe.withDefault []
+            |> View.toHtml
+                { onClick = MoveBlock
+                , transitioning = model.transitioning
+                }
     }
 
 
@@ -75,17 +77,21 @@ update msg model =
                     |> Maybe.andThen (Game.move int)
             of
                 Just game ->
+                    let
+                        won =
+                            Game.gameWon game
+                    in
                     ( { model
                         | game =
                             Just game
+                        , transitioning = won
                       }
-                    , if Game.gameWon game then
+                    , if won then
                         [ PlaySound { sound = Move, looping = False }
                             |> Port.fromElm
                         , PlaySound { sound = Win, looping = False }
                             |> Port.fromElm
-                        , Task.perform (\() -> UnloadGame) (Process.sleep 500)
-                        , Task.perform (\() -> LoadGame) (Process.sleep 1000)
+                        , Task.perform (\() -> UnloadGame) (Process.sleep 1000)
                         ]
                             |> Cmd.batch
 
@@ -102,7 +108,7 @@ update msg model =
 
         Received result ->
             case result of
-                Ok (SoundEnded sound) ->
+                Ok (SoundEnded _) ->
                     model |> withNoCmd
 
                 Err error ->
@@ -115,14 +121,16 @@ update msg model =
         UnloadGame ->
             ( { model
                 | game = Nothing
-                , transitionTo = Game.Level.get (model.currentLevel + 1)
+                , transitioning = False
                 , currentLevel = model.currentLevel + 1
               }
-            , Cmd.none
+            , Task.perform (\() -> LoadGame) (Process.sleep 20)
             )
 
         LoadGame ->
-            ( { model | game = model.transitionTo, transitionTo = Nothing }
+            ( { model
+                | game = Game.Level.get (model.currentLevel + 1)
+              }
             , Cmd.none
             )
 

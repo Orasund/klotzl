@@ -6822,7 +6822,7 @@ var $author$project$Main$init = function (_v0) {
 		{
 			currentLevel: 1,
 			game: $elm$core$Maybe$Just($author$project$Game$Level$lvl1),
-			transitionTo: $elm$core$Maybe$Nothing
+			transitioning: false
 		},
 		$author$project$Port$fromElm(
 			$author$project$PortDefinition$RegisterSounds($author$project$Gen$Sound$asList)));
@@ -7249,13 +7249,15 @@ var $author$project$Main$update = F2(
 					model.game);
 				if (_v1.$ === 'Just') {
 					var game = _v1.a;
+					var won = $author$project$Game$gameWon(game);
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
 							{
-								game: $elm$core$Maybe$Just(game)
+								game: $elm$core$Maybe$Just(game),
+								transitioning: won
 							}),
-						$author$project$Game$gameWon(game) ? $elm$core$Platform$Cmd$batch(
+						won ? $elm$core$Platform$Cmd$batch(
 							_List_fromArray(
 								[
 									$author$project$Port$fromElm(
@@ -7268,12 +7270,6 @@ var $author$project$Main$update = F2(
 									$elm$core$Task$perform,
 									function (_v2) {
 										return $author$project$Main$UnloadGame;
-									},
-									$elm$core$Process$sleep(500)),
-									A2(
-									$elm$core$Task$perform,
-									function (_v3) {
-										return $author$project$Main$LoadGame;
 									},
 									$elm$core$Process$sleep(1000))
 								])) : $author$project$Port$fromElm(
@@ -7289,28 +7285,30 @@ var $author$project$Main$update = F2(
 			case 'Received':
 				var result = msg.a;
 				if (result.$ === 'Ok') {
-					var sound = result.a.a;
 					return withNoCmd(model);
 				} else {
 					var error = result.a;
-					var _v5 = A2($elm$core$Debug$log, 'received invalid json', error);
+					var _v4 = A2($elm$core$Debug$log, 'received invalid json', error);
 					return withNoCmd(model);
 				}
 			case 'UnloadGame':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{
-							currentLevel: model.currentLevel + 1,
-							game: $elm$core$Maybe$Nothing,
-							transitionTo: $author$project$Game$Level$get(model.currentLevel + 1)
-						}),
-					$elm$core$Platform$Cmd$none);
+						{currentLevel: model.currentLevel + 1, game: $elm$core$Maybe$Nothing, transitioning: false}),
+					A2(
+						$elm$core$Task$perform,
+						function (_v5) {
+							return $author$project$Main$LoadGame;
+						},
+						$elm$core$Process$sleep(20)));
 			default:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{game: model.transitionTo, transitionTo: $elm$core$Maybe$Nothing}),
+						{
+							game: $author$project$Game$Level$get(model.currentLevel + 1)
+						}),
 					$elm$core$Platform$Cmd$none);
 		}
 	});
@@ -7323,6 +7321,16 @@ var $Orasund$elm_layout$Layout$alignAtCenter = A2($elm$html$Html$Attributes$styl
 var $Orasund$elm_layout$Layout$contentCentered = A2($elm$html$Html$Attributes$style, 'justify-content', 'center');
 var $Orasund$elm_layout$Layout$centered = _List_fromArray(
 	[$Orasund$elm_layout$Layout$contentCentered, $Orasund$elm_layout$Layout$alignAtCenter]);
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
+	});
+var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
+var $author$project$Css$container = $elm$html$Html$Attributes$class('container');
+var $author$project$Css$container_loading = $elm$html$Html$Attributes$class('container-loading');
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $Orasund$elm_layout$Layout$el = F2(
 	function (attrs, content) {
@@ -7335,13 +7343,6 @@ var $Orasund$elm_layout$Layout$el = F2(
 			_List_fromArray(
 				[content]));
 	});
-var $elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			$elm$json$Json$Encode$string(string));
-	});
 var $elm$html$Html$Attributes$href = function (url) {
 	return A2(
 		$elm$html$Html$Attributes$stringProperty,
@@ -7353,6 +7354,9 @@ var $elm$virtual_dom$VirtualDom$node = function (tag) {
 		_VirtualDom_noScript(tag));
 };
 var $elm$html$Html$node = $elm$virtual_dom$VirtualDom$node;
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $Orasund$elm_layout$Layout$none = $elm$html$Html$text('');
 var $elm$html$Html$Attributes$rel = _VirtualDom_attribute('rel');
 var $elm$virtual_dom$VirtualDom$attribute = F2(
 	function (key, value) {
@@ -7427,7 +7431,6 @@ var $author$project$View$background = function (_int) {
 	var c2 = _v0.b;
 	return 'linear-gradient(to bottom right,' + (c1 + (', ' + (c2 + ')')));
 };
-var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $author$project$Css$bottom_left = $elm$html$Html$Attributes$class('bottom-left');
 var $author$project$Css$bottom_right = $elm$html$Html$Attributes$class('bottom-right');
 var $author$project$Config$circleSize = 80;
@@ -7447,9 +7450,6 @@ var $elm$core$List$concatMap = F2(
 		return $elm$core$List$concat(
 			A2($elm$core$List$map, f, list));
 	});
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $Orasund$elm_layout$Layout$none = $elm$html$Html$text('');
 var $author$project$Config$squareSize = 100;
 var $author$project$View$goal = function (attrs) {
 	return A2(
@@ -7759,19 +7759,28 @@ var $author$project$View$viewportMeta = function () {
 		_List_Nil);
 }();
 var $author$project$View$toHtml = F2(
-	function (msg, game) {
+	function (args, maybe) {
 		return _List_fromArray(
 			[
 				A2(
-				$Orasund$elm_layout$Layout$el,
-				_Utils_ap(
-					_List_fromArray(
-						[
-							A2($elm$html$Html$Attributes$style, 'height', '100%')
-						]),
-					$Orasund$elm_layout$Layout$centered),
-				$author$project$View$tile(
-					{goal: game.goal, height: game.height, nodes: game.board, onClick: msg, tiles: game.tiles, width: game.width})),
+				$elm$core$Maybe$withDefault,
+				$Orasund$elm_layout$Layout$none,
+				A2(
+					$elm$core$Maybe$map,
+					function (game) {
+						return A2(
+							$Orasund$elm_layout$Layout$el,
+							_Utils_ap(
+								_List_fromArray(
+									[
+										A2($elm$html$Html$Attributes$style, 'height', '100%'),
+										args.transitioning ? $author$project$Css$container_loading : $author$project$Css$container
+									]),
+								$Orasund$elm_layout$Layout$centered),
+							$author$project$View$tile(
+								{goal: game.goal, height: game.height, nodes: game.board, onClick: args.onClick, tiles: game.tiles, width: game.width}));
+					},
+					maybe)),
 				$author$project$View$viewportMeta,
 				A3(
 				$elm$html$Html$node,
@@ -7787,12 +7796,9 @@ var $author$project$View$toHtml = F2(
 var $author$project$Main$view = function (model) {
 	return {
 		body: A2(
-			$elm$core$Maybe$withDefault,
-			_List_Nil,
-			A2(
-				$elm$core$Maybe$map,
-				$author$project$View$toHtml($author$project$Main$MoveBlock),
-				model.game)),
+			$author$project$View$toHtml,
+			{onClick: $author$project$Main$MoveBlock, transitioning: model.transitioning},
+			model.game),
 		title: 'Test'
 	};
 };

@@ -38,3 +38,45 @@ body {
 
     border-bottom-right-radius: 25px;
 }
+
+.container-loading {
+    position: relative;
+    right: -100vw;
+    animation-name: unload;
+    animation-duration: 1s
+}
+
+.container {
+    position: relative;
+    left: 0;
+    animation-name: load;
+    animation-duration: 1s
+}
+
+@keyframes unload {
+    0% {
+        right: 0;
+    }
+
+    50% {
+        right: 0;
+    }
+
+    to {
+        right: -100vw;
+    }
+}
+
+@keyframes load {
+    0% {
+        left: -100vw;
+    }
+
+    50% {
+        left: -100vw;
+    }
+
+    to {
+        left: 0;
+    }
+}

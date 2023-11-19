@@ -9,7 +9,7 @@
     "generatePorts": "elm-ts-interop --output elm.d.ts --definition-dir ports --definition-module PortDefinition",
     "build": "elm make src/Main.elm --output=assets/js/elm.js && node scripts/createZip.js",
     "dev": "elm-live src/Main.elm -- --output=assets/js/elm.js",
-    "css": "css-in-elm build src/style.css generated/Css.elm"
+    "css": "css-in-elm build assets/main.css generated/Css.elm"
   },
   "author": "",
   "license": "BSD-3-Clause",

@@ -226,17 +226,31 @@ viewportMeta =
         []
 
 
-toHtml : (Int -> msg) -> Game -> List (Html msg)
-toHtml msg game =
-    [ { nodes = game.board
-      , width = game.width
-      , height = game.height
-      , tiles = game.tiles
-      , onClick = msg
-      , goal = game.goal
-      }
-        |> tile
-        |> Layout.el ([ Html.Attributes.style "height" "100%" ] ++ Layout.centered)
+toHtml : { onClick : Int -> msg, transitioning : Bool } -> Maybe Game -> List (Html msg)
+toHtml args maybe =
+    [ maybe
+        |> Maybe.map
+            (\game ->
+                { nodes = game.board
+                , width = game.width
+                , height = game.height
+                , tiles = game.tiles
+                , onClick = args.onClick
+                , goal = game.goal
+                }
+                    |> tile
+                    |> Layout.el
+                        ([ Html.Attributes.style "height" "100%"
+                         , if args.transitioning then
+                            Css.container_loading
+
+                           else
+                            Css.container
+                         ]
+                            ++ Layout.centered
+                        )
+            )
+        |> Maybe.withDefault Layout.none
     , viewportMeta
     , Html.node "link"
         [ Html.Attributes.rel "stylesheet"
