@@ -8,7 +8,7 @@ type alias Game =
     { board : Dict ( Int, Int ) Int
     , width : Int
     , height : Int
-    , goal : ( Int, Int )
+    , goal : List ( Int, Int )
     , tiles :
         Dict
             Int
@@ -20,7 +20,7 @@ type alias Game =
 
 fromBoard :
     { board : Dict ( Int, Int ) Int
-    , goal : ( Int, Int )
+    , goal : List ( Int, Int )
     }
     -> Game
 fromBoard args =
@@ -83,41 +83,16 @@ setBoard board game =
     fromBoard { board = board, goal = game.goal }
 
 
-test : Game
-test =
-    { board =
-        [ ( ( 0, 0 ), 1 )
-        , ( ( 0, 1 ), 2 )
-        , ( ( 1, 0 ), 3 )
-        , ( ( 1, 1 ), 3 )
-        , ( ( 0, 2 ), 4 )
-        , ( ( 0, 3 ), 4 )
-        , ( ( 1, 2 ), 5 )
-        , ( ( 1, 3 ), 6 )
-        , ( ( 2, 3 ), -1 )
-        ]
-            |> Dict.fromList
-    , width = 3
-    , height = 4
-    , goal = ( 2, -1 )
-    , tiles =
-        [ ( -1, { topLeft = ( 2, 3 ), size = ( 1, 1 ) } )
-        , ( 1, { topLeft = ( 0, 0 ), size = ( 1, 1 ) } )
-        , ( 2, { topLeft = ( 0, 1 ), size = ( 1, 1 ) } )
-        , ( 3, { topLeft = ( 1, 0 ), size = ( 1, 2 ) } )
-        , ( 4, { topLeft = ( 0, 2 ), size = ( 1, 2 ) } )
-        , ( 5, { topLeft = ( 1, 2 ), size = ( 1, 1 ) } )
-        , ( 6, { topLeft = ( 1, 3 ), size = ( 1, 1 ) } )
-        ]
-            |> Dict.fromList
-    }
-
-
 gameWon : Game -> Bool
 gameWon game =
-    game.board
-        |> Dict.get game.goal
-        |> (==) (Just -1)
+    game.goal
+        |> List.all
+            (\goal ->
+                game.board
+                    |> Dict.get goal
+                    |> Maybe.map (\int -> int < 0)
+                    |> Maybe.withDefault False
+            )
 
 
 move : Int -> Game -> Maybe Game
@@ -128,7 +103,7 @@ move targetId game =
 
         isValidPos ( x, y ) =
             if
-                ((targetId == -1) && (( x, y ) == game.goal))
+                ((targetId < 0) && List.member ( x, y ) game.goal)
                     || ((0 <= x && x < game.width) && (0 <= y && y < game.height))
             then
                 Just ( x, y )

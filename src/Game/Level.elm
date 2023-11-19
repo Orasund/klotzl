@@ -22,6 +22,9 @@ get int =
         5 ->
             Just lvl5
 
+        6 ->
+            Just lvl6
+
         _ ->
             Nothing
 
@@ -29,7 +32,7 @@ get int =
 lvl1 : Game
 lvl1 =
     { board = Dict.fromList [ ( ( 1, 0 ), -1 ), ( ( 0, 0 ), 1 ) ]
-    , goal = ( 1, -1 )
+    , goal = [ ( 1, -1 ) ]
     }
         |> Game.fromBoard
 
@@ -37,7 +40,7 @@ lvl1 =
 lvl2 : Game
 lvl2 =
     { board = Dict.fromList [ ( ( 1, 1 ), -1 ), ( ( 0, 0 ), 1 ), ( ( 0, 1 ), 2 ) ]
-    , goal = ( 1, -1 )
+    , goal = [ ( 1, -1 ) ]
     }
         |> Game.fromBoard
 
@@ -52,7 +55,7 @@ lvl3 =
             , ( ( 0, 2 ), 3 )
             , ( ( 1, 0 ), 4 )
             ]
-    , goal = ( 1, -1 )
+    , goal = [ ( 1, -1 ) ]
     }
         |> Game.fromBoard
 
@@ -69,7 +72,7 @@ lvl4 =
             , ( ( 0, 2 ), 4 )
             , ( ( 2, 0 ), 5 )
             ]
-    , goal = ( 2, -1 )
+    , goal = [ ( 2, -1 ) ]
     }
         |> Game.fromBoard
 
@@ -86,6 +89,23 @@ lvl5 =
             , ( ( 1, 1 ), 3 )
             , ( ( 1, 2 ), 4 )
             ]
-    , goal = ( 2, -1 )
+    , goal = [ ( 2, -1 ) ]
+    }
+        |> Game.fromBoard
+
+
+lvl6 : Game
+lvl6 =
+    { board =
+        Dict.fromList
+            [ ( ( 0, 2 ), -1 )
+            , ( ( 2, 2 ), -2 )
+            , ( ( 1, 0 ), 1 )
+            , ( ( 0, 1 ), 2 )
+            , ( ( 1, 1 ), 2 )
+            , ( ( 2, 1 ), 3 )
+            , ( ( 1, 2 ), 4 )
+            ]
+    , goal = [ ( 0, -1 ), ( 2, -1 ) ]
     }
         |> Game.fromBoard

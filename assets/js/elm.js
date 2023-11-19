@@ -6912,7 +6912,10 @@ var $author$project$Game$Level$lvl1 = $author$project$Game$fromBoard(
 					_Utils_Tuple2(0, 0),
 					1)
 				])),
-		goal: _Utils_Tuple2(1, -1)
+		goal: _List_fromArray(
+			[
+				_Utils_Tuple2(1, -1)
+			])
 	});
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
@@ -6951,10 +6954,55 @@ var $elm$core$Maybe$andThen = F2(
 		}
 	});
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
+var $elm$core$List$any = F2(
+	function (isOkay, list) {
+		any:
+		while (true) {
+			if (!list.b) {
+				return false;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				if (isOkay(x)) {
+					return true;
+				} else {
+					var $temp$isOkay = isOkay,
+						$temp$list = xs;
+					isOkay = $temp$isOkay;
+					list = $temp$list;
+					continue any;
+				}
+			}
+		}
+	});
+var $elm$core$Basics$composeL = F3(
+	function (g, f, x) {
+		return g(
+			f(x));
+	});
+var $elm$core$Basics$not = _Basics_not;
+var $elm$core$List$all = F2(
+	function (isOkay, list) {
+		return !A2(
+			$elm$core$List$any,
+			A2($elm$core$Basics$composeL, $elm$core$Basics$not, isOkay),
+			list);
+	});
 var $author$project$Game$gameWon = function (game) {
-	return _Utils_eq(
-		$elm$core$Maybe$Just(-1),
-		A2($elm$core$Dict$get, game.goal, game.board));
+	return A2(
+		$elm$core$List$all,
+		function (goal) {
+			return A2(
+				$elm$core$Maybe$withDefault,
+				false,
+				A2(
+					$elm$core$Maybe$map,
+					function (_int) {
+						return _int < 0;
+					},
+					A2($elm$core$Dict$get, goal, game.board)));
+		},
+		game.goal);
 };
 var $author$project$Game$Level$lvl2 = $author$project$Game$fromBoard(
 	{
@@ -6971,7 +7019,10 @@ var $author$project$Game$Level$lvl2 = $author$project$Game$fromBoard(
 					_Utils_Tuple2(0, 1),
 					2)
 				])),
-		goal: _Utils_Tuple2(1, -1)
+		goal: _List_fromArray(
+			[
+				_Utils_Tuple2(1, -1)
+			])
 	});
 var $author$project$Game$Level$lvl3 = $author$project$Game$fromBoard(
 	{
@@ -6994,7 +7045,10 @@ var $author$project$Game$Level$lvl3 = $author$project$Game$fromBoard(
 					_Utils_Tuple2(1, 0),
 					4)
 				])),
-		goal: _Utils_Tuple2(1, -1)
+		goal: _List_fromArray(
+			[
+				_Utils_Tuple2(1, -1)
+			])
 	});
 var $author$project$Game$Level$lvl4 = $author$project$Game$fromBoard(
 	{
@@ -7023,7 +7077,10 @@ var $author$project$Game$Level$lvl4 = $author$project$Game$fromBoard(
 					_Utils_Tuple2(2, 0),
 					5)
 				])),
-		goal: _Utils_Tuple2(2, -1)
+		goal: _List_fromArray(
+			[
+				_Utils_Tuple2(2, -1)
+			])
 	});
 var $author$project$Game$Level$lvl5 = $author$project$Game$fromBoard(
 	{
@@ -7052,7 +7109,43 @@ var $author$project$Game$Level$lvl5 = $author$project$Game$fromBoard(
 					_Utils_Tuple2(1, 2),
 					4)
 				])),
-		goal: _Utils_Tuple2(2, -1)
+		goal: _List_fromArray(
+			[
+				_Utils_Tuple2(2, -1)
+			])
+	});
+var $author$project$Game$Level$lvl6 = $author$project$Game$fromBoard(
+	{
+		board: $elm$core$Dict$fromList(
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					_Utils_Tuple2(0, 2),
+					-1),
+					_Utils_Tuple2(
+					_Utils_Tuple2(2, 2),
+					-2),
+					_Utils_Tuple2(
+					_Utils_Tuple2(1, 0),
+					1),
+					_Utils_Tuple2(
+					_Utils_Tuple2(0, 1),
+					2),
+					_Utils_Tuple2(
+					_Utils_Tuple2(1, 1),
+					2),
+					_Utils_Tuple2(
+					_Utils_Tuple2(2, 1),
+					3),
+					_Utils_Tuple2(
+					_Utils_Tuple2(1, 2),
+					4)
+				])),
+		goal: _List_fromArray(
+			[
+				_Utils_Tuple2(0, -1),
+				_Utils_Tuple2(2, -1)
+			])
 	});
 var $author$project$Game$Level$get = function (_int) {
 	switch (_int) {
@@ -7066,6 +7159,8 @@ var $author$project$Game$Level$get = function (_int) {
 			return $elm$core$Maybe$Just($author$project$Game$Level$lvl4);
 		case 5:
 			return $elm$core$Maybe$Just($author$project$Game$Level$lvl5);
+		case 6:
+			return $elm$core$Maybe$Just($author$project$Game$Level$lvl6);
 		default:
 			return $elm$core$Maybe$Nothing;
 	}
@@ -7090,6 +7185,15 @@ var $elm$core$Tuple$mapBoth = F3(
 			funcA(x),
 			funcB(y));
 	});
+var $elm$core$List$member = F2(
+	function (x, xs) {
+		return A2(
+			$elm$core$List$any,
+			function (a) {
+				return _Utils_eq(a, x);
+			},
+			xs);
+	});
 var $author$project$Game$move = F2(
 	function (targetId, game) {
 		var movements = _List_fromArray(
@@ -7102,7 +7206,8 @@ var $author$project$Game$move = F2(
 		var isValidPos = function (_v4) {
 			var x = _v4.a;
 			var y = _v4.b;
-			return ((_Utils_eq(targetId, -1) && _Utils_eq(
+			return (((targetId < 0) && A2(
+				$elm$core$List$member,
 				_Utils_Tuple2(x, y),
 				game.goal)) || (((0 <= x) && (_Utils_cmp(x, game.width) < 0)) && ((0 <= y) && (_Utils_cmp(y, game.height) < 0)))) ? $elm$core$Maybe$Just(
 				_Utils_Tuple2(x, y)) : $elm$core$Maybe$Nothing;
@@ -7427,16 +7532,12 @@ var $elm$virtual_dom$VirtualDom$keyedNode = function (tag) {
 		_VirtualDom_noScript(tag));
 };
 var $elm$html$Html$Keyed$node = $elm$virtual_dom$VirtualDom$keyedNode;
-var $elm$core$Basics$not = _Basics_not;
 var $author$project$View$square = function (attrs) {
 	return A2($Orasund$elm_layout$Layout$el, attrs, $Orasund$elm_layout$Layout$none);
 };
 var $author$project$Css$top_left = $elm$html$Html$Attributes$class('top-left');
 var $author$project$Css$top_right = $elm$html$Html$Attributes$class('top-right');
 var $author$project$View$tile = function (args) {
-	var _v0 = args.goal;
-	var goalX = _v0.a;
-	var goalY = _v0.b;
 	return A3(
 		$elm$html$Html$Keyed$node,
 		'div',
@@ -7465,63 +7566,78 @@ var $author$project$View$tile = function (args) {
 					[
 						_Utils_Tuple2(
 						$author$project$Css$top_left,
-						_Utils_eq(
-							args.goal,
-							_Utils_Tuple2(0, -1)) || _Utils_eq(
-							args.goal,
-							_Utils_Tuple2(-1, 0))),
+						A2(
+							$elm$core$List$member,
+							_Utils_Tuple2(0, -1),
+							args.goal) || A2(
+							$elm$core$List$member,
+							_Utils_Tuple2(-1, 0),
+							args.goal)),
 						_Utils_Tuple2(
 						$author$project$Css$top_right,
-						_Utils_eq(
-							args.goal,
-							_Utils_Tuple2(args.width - 1, -1)) || _Utils_eq(
-							args.goal,
-							_Utils_Tuple2(args.width, 0))),
+						A2(
+							$elm$core$List$member,
+							_Utils_Tuple2(args.width - 1, -1),
+							args.goal) || A2(
+							$elm$core$List$member,
+							_Utils_Tuple2(args.width, 0),
+							args.goal)),
 						_Utils_Tuple2(
 						$author$project$Css$bottom_left,
-						_Utils_eq(
-							args.goal,
-							_Utils_Tuple2(-1, args.height - 1)) || _Utils_eq(
-							args.goal,
-							_Utils_Tuple2(0, args.height))),
+						A2(
+							$elm$core$List$member,
+							_Utils_Tuple2(-1, args.height - 1),
+							args.goal) || A2(
+							$elm$core$List$member,
+							_Utils_Tuple2(0, args.height),
+							args.goal)),
 						_Utils_Tuple2(
 						$author$project$Css$bottom_right,
-						_Utils_eq(
-							args.goal,
-							_Utils_Tuple2(args.width, args.height - 1)) || _Utils_eq(
-							args.goal,
-							_Utils_Tuple2(args.width - 1, args.height)))
+						A2(
+							$elm$core$List$member,
+							_Utils_Tuple2(args.width, args.height - 1),
+							args.goal) || A2(
+							$elm$core$List$member,
+							_Utils_Tuple2(args.width - 1, args.height),
+							args.goal))
 					]))),
 		A2(
 			$elm$core$List$sortBy,
 			$elm$core$Tuple$first,
-			A2(
-				$elm$core$List$cons,
-				_Utils_Tuple2(
-					'goal',
-					$author$project$View$goal(
-						_List_fromArray(
-							[
-								A2(
-								$elm$html$Html$Attributes$style,
-								'left',
-								$elm$core$String$fromInt(goalX * $author$project$Config$squareSize) + 'px'),
-								A2(
-								$elm$html$Html$Attributes$style,
-								'top',
-								$elm$core$String$fromInt(goalY * $author$project$Config$squareSize) + 'px'),
-								A2($elm$html$Html$Attributes$style, 'background-color', 'var(--dark-gray)'),
-								A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-								A2(
-								$elm$html$Html$Attributes$style,
-								'border-top-left-radius',
-								$elm$core$String$fromInt(($author$project$Config$squareSize / 2) | 0) + 'px'),
-								A2(
-								$elm$html$Html$Attributes$style,
-								'border-top-right-radius',
-								$elm$core$String$fromInt(($author$project$Config$squareSize / 2) | 0) + 'px'),
-								A2($elm$html$Html$Attributes$style, 'z-index', '-1')
-							]))),
+			_Utils_ap(
+				A2(
+					$elm$core$List$indexedMap,
+					F2(
+						function (i, _v4) {
+							var goalX = _v4.a;
+							var goalY = _v4.b;
+							return _Utils_Tuple2(
+								'goal' + $elm$core$String$fromInt(i),
+								$author$project$View$goal(
+									_List_fromArray(
+										[
+											A2(
+											$elm$html$Html$Attributes$style,
+											'left',
+											$elm$core$String$fromInt(goalX * $author$project$Config$squareSize) + 'px'),
+											A2(
+											$elm$html$Html$Attributes$style,
+											'top',
+											$elm$core$String$fromInt(goalY * $author$project$Config$squareSize) + 'px'),
+											A2($elm$html$Html$Attributes$style, 'background-color', 'var(--dark-gray)'),
+											A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+											A2(
+											$elm$html$Html$Attributes$style,
+											'border-top-left-radius',
+											$elm$core$String$fromInt(($author$project$Config$squareSize / 2) | 0) + 'px'),
+											A2(
+											$elm$html$Html$Attributes$style,
+											'border-top-right-radius',
+											$elm$core$String$fromInt(($author$project$Config$squareSize / 2) | 0) + 'px'),
+											A2($elm$html$Html$Attributes$style, 'z-index', '-1')
+										])));
+						}),
+					args.goal),
 				A2(
 					$elm$core$List$concatMap,
 					function (y) {
@@ -7531,21 +7647,21 @@ var $author$project$View$tile = function (args) {
 								return A2(
 									$elm$core$Maybe$map,
 									function (i) {
-										var _v1 = A2(
+										var _v0 = A2(
 											$elm$core$Maybe$withDefault,
 											{
 												size: _Utils_Tuple2(0, 0),
 												topLeft: _Utils_Tuple2(0, 0)
 											},
 											A2($elm$core$Dict$get, i, args.tiles));
-										var size = _v1.size;
-										var topLeft = _v1.topLeft;
-										var _v2 = topLeft;
-										var offsetX = _v2.a;
-										var offsetY = _v2.b;
-										var _v3 = size;
-										var width = _v3.a;
-										var height = _v3.b;
+										var size = _v0.size;
+										var topLeft = _v0.topLeft;
+										var _v1 = topLeft;
+										var offsetX = _v1.a;
+										var offsetY = _v1.b;
+										var _v2 = size;
+										var width = _v2.a;
+										var height = _v2.b;
 										return function (html) {
 											return _Utils_Tuple2(
 												$elm$core$String$fromInt(i) + ('-' + ($elm$core$String$fromInt(x - offsetX) + ('-' + $elm$core$String$fromInt(y - offsetY)))),
@@ -7553,7 +7669,7 @@ var $author$project$View$tile = function (args) {
 										}(
 											$author$project$View$square(
 												_Utils_ap(
-													_Utils_eq(i, -1) ? _List_fromArray(
+													(i < 0) ? _List_fromArray(
 														[
 															A2(
 															$elm$html$Html$Attributes$style,
@@ -7619,7 +7735,7 @@ var $author$project$View$tile = function (args) {
 																	$author$project$View$background(i)),
 																	A2($elm$html$Html$Attributes$style, 'transition', 'left ease-in-out 0.2s, top ease-in-out 0.2s')
 																]),
-															_Utils_eq(i, -1) ? _List_fromArray(
+															(i < 0) ? _List_fromArray(
 																[
 																	A2(
 																	$elm$html$Html$Attributes$style,
@@ -7627,9 +7743,9 @@ var $author$project$View$tile = function (args) {
 																	$elm$core$String$fromInt($author$project$Config$squareSize) + 'px')
 																]) : A2(
 																$elm$core$List$filterMap,
-																function (_v4) {
-																	var attr = _v4.a;
-																	var bool = _v4.b;
+																function (_v3) {
+																	var attr = _v3.a;
+																	var bool = _v3.b;
 																	return bool ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(attr);
 																},
 																_List_fromArray(

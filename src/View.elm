@@ -36,14 +36,10 @@ tile :
     , height : Int
     , tiles : Dict Int { topLeft : ( Int, Int ), size : ( Int, Int ) }
     , onClick : Int -> msg
-    , goal : ( Int, Int )
+    , goal : List ( Int, Int )
     }
     -> Html msg
 tile args =
-    let
-        ( goalX, goalY ) =
-            args.goal
-    in
     List.range -1 args.height
         |> List.concatMap
             (\y ->
@@ -65,7 +61,7 @@ tile args =
                                             ( offsetX, offsetY ) =
                                                 topLeft
                                         in
-                                        (if i == -1 then
+                                        (if i < 0 then
                                             [ Html.Attributes.style "border-radius" (String.fromInt Config.squareSize ++ "px") ]
 
                                          else
@@ -114,7 +110,7 @@ tile args =
                                                     }
                                                 )
                                             |> (++)
-                                                (if i == -1 then
+                                                (if i < 0 then
                                                     [ Html.Attributes.style "left" (String.fromInt (x * Config.squareSize + ((Config.squareSize - Config.circleSize) // 2)) ++ "px")
                                                     , Html.Attributes.style "top" (String.fromInt (y * Config.squareSize + ((Config.squareSize - Config.circleSize) // 2)) ++ "px")
                                                     , Html.Attributes.style "width" (String.fromInt Config.circleSize ++ "px")
@@ -141,24 +137,29 @@ tile args =
                                     )
                         )
             )
-        |> (::)
-            ( "goal"
-            , goal
-                [ Html.Attributes.style "left" (String.fromInt (goalX * Config.squareSize) ++ "px")
-                , Html.Attributes.style "top" (String.fromInt (goalY * Config.squareSize) ++ "px")
-                , Html.Attributes.style "background-color" "var(--dark-gray)"
-                , Html.Attributes.style "position" "absolute"
-                , Html.Attributes.style "border-top-left-radius" (String.fromInt (Config.squareSize // 2) ++ "px")
-                , Html.Attributes.style "border-top-right-radius" (String.fromInt (Config.squareSize // 2) ++ "px")
-                , Html.Attributes.style "z-index" "-1"
-                ]
+        |> (++)
+            (args.goal
+                |> List.indexedMap
+                    (\i ( goalX, goalY ) ->
+                        ( "goal" ++ String.fromInt i
+                        , goal
+                            [ Html.Attributes.style "left" (String.fromInt (goalX * Config.squareSize) ++ "px")
+                            , Html.Attributes.style "top" (String.fromInt (goalY * Config.squareSize) ++ "px")
+                            , Html.Attributes.style "background-color" "var(--dark-gray)"
+                            , Html.Attributes.style "position" "absolute"
+                            , Html.Attributes.style "border-top-left-radius" (String.fromInt (Config.squareSize // 2) ++ "px")
+                            , Html.Attributes.style "border-top-right-radius" (String.fromInt (Config.squareSize // 2) ++ "px")
+                            , Html.Attributes.style "z-index" "-1"
+                            ]
+                        )
+                    )
             )
         |> List.sortBy Tuple.first
         |> Html.Keyed.node "div"
-            ([ ( Css.top_left, args.goal == ( 0, -1 ) || args.goal == ( -1, 0 ) )
-             , ( Css.top_right, args.goal == ( args.width - 1, -1 ) || args.goal == ( args.width, 0 ) )
-             , ( Css.bottom_left, args.goal == ( -1, args.height - 1 ) || args.goal == ( 0, args.height ) )
-             , ( Css.bottom_right, args.goal == ( args.width, args.height - 1 ) || args.goal == ( args.width - 1, args.height ) )
+            ([ ( Css.top_left, List.member ( 0, -1 ) args.goal || List.member ( -1, 0 ) args.goal )
+             , ( Css.top_right, List.member ( args.width - 1, -1 ) args.goal || List.member ( args.width, 0 ) args.goal )
+             , ( Css.bottom_left, List.member ( -1, args.height - 1 ) args.goal || List.member ( 0, args.height ) args.goal )
+             , ( Css.bottom_right, List.member ( args.width, args.height - 1 ) args.goal || List.member ( args.width - 1, args.height ) args.goal )
              ]
                 |> List.filterMap
                     (\( attr, bool ) ->
