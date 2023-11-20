@@ -25,6 +25,12 @@ get int =
         6 ->
             Just lvl6
 
+        7 ->
+            Just lvl7
+
+        8 ->
+            Just lvl8
+
         _ ->
             Nothing
 
@@ -98,11 +104,40 @@ lvl6 : Game
 lvl6 =
     { board =
         Dict.fromList
+            [ ( ( 0, 0 ), -1 )
+            , ( ( 1, 0 ), 1 )
+            , ( ( 2, 0 ), -2 )
+            ]
+    , goal = [ ( 0, -1 ), ( 2, -1 ) ]
+    }
+        |> Game.fromBoard
+
+
+lvl7 : Game
+lvl7 =
+    { board =
+        Dict.fromList
+            [ ( ( 0, 1 ), -1 )
+            , ( ( 0, 0 ), 1 )
+            , ( ( 3, 0 ), 3 )
+            , ( ( 1, 1 ), 5 )
+            , ( ( 2, 1 ), 6 )
+            , ( ( 3, 1 ), -2 )
+            ]
+    , goal = [ ( 0, -1 ), ( 3, -1 ) ]
+    }
+        |> Game.fromBoard
+
+
+lvl8 : Game
+lvl8 =
+    { board =
+        Dict.fromList
             [ ( ( 0, 2 ), -1 )
             , ( ( 2, 2 ), -2 )
             , ( ( 1, 0 ), 1 )
             , ( ( 0, 1 ), 2 )
-            , ( ( 1, 1 ), 2 )
+            , ( ( 1, 1 ), 5 )
             , ( ( 2, 1 ), 3 )
             , ( ( 1, 2 ), 4 )
             ]

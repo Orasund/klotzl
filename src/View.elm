@@ -142,15 +142,36 @@ tile args =
                 |> List.indexedMap
                     (\i ( goalX, goalY ) ->
                         ( "goal" ++ String.fromInt i
-                        , goal
-                            [ Html.Attributes.style "left" (String.fromInt (goalX * Config.squareSize) ++ "px")
-                            , Html.Attributes.style "top" (String.fromInt (goalY * Config.squareSize) ++ "px")
-                            , Html.Attributes.style "background-color" "var(--dark-gray)"
-                            , Html.Attributes.style "position" "absolute"
-                            , Html.Attributes.style "border-top-left-radius" (String.fromInt (Config.squareSize // 2) ++ "px")
-                            , Html.Attributes.style "border-top-right-radius" (String.fromInt (Config.squareSize // 2) ++ "px")
-                            , Html.Attributes.style "z-index" "-1"
-                            ]
+                        , ([ ( Html.Attributes.style "border-top-left-radius" (String.fromInt (Config.squareSize // 2) ++ "px")
+                             , goalY == args.height || goalX == args.width
+                             )
+                           , ( Html.Attributes.style "border-top-right-radius" (String.fromInt (Config.squareSize // 2) ++ "px")
+                             , goalY == args.height || goalX == -1
+                             )
+                           , ( Html.Attributes.style "border-bottom-left-radius" (String.fromInt (Config.squareSize // 2) ++ "px")
+                             , goalY == -1 || goalX == args.width
+                             )
+                           , ( Html.Attributes.style "border-bottom-right-radius" (String.fromInt (Config.squareSize // 2) ++ "px")
+                             , goalY == -1 || goalX == -1
+                             )
+                           ]
+                            |> List.filterMap
+                                (\( attr, bool ) ->
+                                    if not bool then
+                                        Just attr
+
+                                    else
+                                        Nothing
+                                )
+                            |> (++)
+                                [ Html.Attributes.style "left" (String.fromInt (goalX * Config.squareSize) ++ "px")
+                                , Html.Attributes.style "top" (String.fromInt (goalY * Config.squareSize) ++ "px")
+                                , Html.Attributes.style "background-color" "var(--dark-gray)"
+                                , Html.Attributes.style "position" "absolute"
+                                , Html.Attributes.style "z-index" "-1"
+                                ]
+                          )
+                            |> goal
                         )
                     )
             )

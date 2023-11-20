@@ -7120,6 +7120,57 @@ var $author$project$Game$Level$lvl6 = $author$project$Game$fromBoard(
 			_List_fromArray(
 				[
 					_Utils_Tuple2(
+					_Utils_Tuple2(0, 0),
+					-1),
+					_Utils_Tuple2(
+					_Utils_Tuple2(1, 0),
+					1),
+					_Utils_Tuple2(
+					_Utils_Tuple2(2, 0),
+					-2)
+				])),
+		goal: _List_fromArray(
+			[
+				_Utils_Tuple2(0, -1),
+				_Utils_Tuple2(2, -1)
+			])
+	});
+var $author$project$Game$Level$lvl7 = $author$project$Game$fromBoard(
+	{
+		board: $elm$core$Dict$fromList(
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					_Utils_Tuple2(0, 1),
+					-1),
+					_Utils_Tuple2(
+					_Utils_Tuple2(0, 0),
+					1),
+					_Utils_Tuple2(
+					_Utils_Tuple2(3, 0),
+					3),
+					_Utils_Tuple2(
+					_Utils_Tuple2(1, 1),
+					5),
+					_Utils_Tuple2(
+					_Utils_Tuple2(2, 1),
+					6),
+					_Utils_Tuple2(
+					_Utils_Tuple2(3, 1),
+					-2)
+				])),
+		goal: _List_fromArray(
+			[
+				_Utils_Tuple2(0, -1),
+				_Utils_Tuple2(3, -1)
+			])
+	});
+var $author$project$Game$Level$lvl8 = $author$project$Game$fromBoard(
+	{
+		board: $elm$core$Dict$fromList(
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
 					_Utils_Tuple2(0, 2),
 					-1),
 					_Utils_Tuple2(
@@ -7133,7 +7184,7 @@ var $author$project$Game$Level$lvl6 = $author$project$Game$fromBoard(
 					2),
 					_Utils_Tuple2(
 					_Utils_Tuple2(1, 1),
-					2),
+					5),
 					_Utils_Tuple2(
 					_Utils_Tuple2(2, 1),
 					3),
@@ -7161,6 +7212,10 @@ var $author$project$Game$Level$get = function (_int) {
 			return $elm$core$Maybe$Just($author$project$Game$Level$lvl5);
 		case 6:
 			return $elm$core$Maybe$Just($author$project$Game$Level$lvl6);
+		case 7:
+			return $elm$core$Maybe$Just($author$project$Game$Level$lvl7);
+		case 8:
+			return $elm$core$Maybe$Just($author$project$Game$Level$lvl8);
 		default:
 			return $elm$core$Maybe$Nothing;
 	}
@@ -7557,9 +7612,9 @@ var $author$project$View$tile = function (args) {
 				]),
 			A2(
 				$elm$core$List$filterMap,
-				function (_v5) {
-					var attr = _v5.a;
-					var bool = _v5.b;
+				function (_v6) {
+					var attr = _v6.a;
+					var bool = _v6.b;
 					return (!bool) ? $elm$core$Maybe$Just(attr) : $elm$core$Maybe$Nothing;
 				},
 				_List_fromArray(
@@ -7614,28 +7669,55 @@ var $author$project$View$tile = function (args) {
 							return _Utils_Tuple2(
 								'goal' + $elm$core$String$fromInt(i),
 								$author$project$View$goal(
-									_List_fromArray(
-										[
-											A2(
-											$elm$html$Html$Attributes$style,
-											'left',
-											$elm$core$String$fromInt(goalX * $author$project$Config$squareSize) + 'px'),
-											A2(
-											$elm$html$Html$Attributes$style,
-											'top',
-											$elm$core$String$fromInt(goalY * $author$project$Config$squareSize) + 'px'),
-											A2($elm$html$Html$Attributes$style, 'background-color', 'var(--dark-gray)'),
-											A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-											A2(
-											$elm$html$Html$Attributes$style,
-											'border-top-left-radius',
-											$elm$core$String$fromInt(($author$project$Config$squareSize / 2) | 0) + 'px'),
-											A2(
-											$elm$html$Html$Attributes$style,
-											'border-top-right-radius',
-											$elm$core$String$fromInt(($author$project$Config$squareSize / 2) | 0) + 'px'),
-											A2($elm$html$Html$Attributes$style, 'z-index', '-1')
-										])));
+									_Utils_ap(
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$Attributes$style,
+												'left',
+												$elm$core$String$fromInt(goalX * $author$project$Config$squareSize) + 'px'),
+												A2(
+												$elm$html$Html$Attributes$style,
+												'top',
+												$elm$core$String$fromInt(goalY * $author$project$Config$squareSize) + 'px'),
+												A2($elm$html$Html$Attributes$style, 'background-color', 'var(--dark-gray)'),
+												A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+												A2($elm$html$Html$Attributes$style, 'z-index', '-1')
+											]),
+										A2(
+											$elm$core$List$filterMap,
+											function (_v5) {
+												var attr = _v5.a;
+												var bool = _v5.b;
+												return (!bool) ? $elm$core$Maybe$Just(attr) : $elm$core$Maybe$Nothing;
+											},
+											_List_fromArray(
+												[
+													_Utils_Tuple2(
+													A2(
+														$elm$html$Html$Attributes$style,
+														'border-top-left-radius',
+														$elm$core$String$fromInt(($author$project$Config$squareSize / 2) | 0) + 'px'),
+													_Utils_eq(goalY, args.height) || _Utils_eq(goalX, args.width)),
+													_Utils_Tuple2(
+													A2(
+														$elm$html$Html$Attributes$style,
+														'border-top-right-radius',
+														$elm$core$String$fromInt(($author$project$Config$squareSize / 2) | 0) + 'px'),
+													_Utils_eq(goalY, args.height) || _Utils_eq(goalX, -1)),
+													_Utils_Tuple2(
+													A2(
+														$elm$html$Html$Attributes$style,
+														'border-bottom-left-radius',
+														$elm$core$String$fromInt(($author$project$Config$squareSize / 2) | 0) + 'px'),
+													_Utils_eq(goalY, -1) || _Utils_eq(goalX, args.width)),
+													_Utils_Tuple2(
+													A2(
+														$elm$html$Html$Attributes$style,
+														'border-bottom-right-radius',
+														$elm$core$String$fromInt(($author$project$Config$squareSize / 2) | 0) + 'px'),
+													_Utils_eq(goalY, -1) || _Utils_eq(goalX, -1))
+												])))));
 						}),
 					args.goal),
 				A2(
