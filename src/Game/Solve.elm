@@ -2,11 +2,8 @@ module Game.Solve exposing (..)
 
 import Dict exposing (Dict)
 import Game exposing (Game)
+import Game.Node exposing (Node)
 import Set exposing (Set)
-
-
-type alias Node =
-    List ( ( Int, Int ), Int )
 
 
 type alias Graph =
@@ -47,15 +44,12 @@ getNodes args game =
             let
                 g : Game
                 g =
-                    Game.fromBoard
-                        { board = Dict.fromList head
-                        , goal = game.goal
-                        }
+                    Game.Node.toGame { goals = game.goal } head
 
                 moves : List Node
                 moves =
                     validMoves g
-                        |> List.map (\{ board } -> Dict.toList board)
+                        |> List.map Game.Node.fromGame
 
                 nodes : Set Node
                 nodes =
@@ -131,7 +125,7 @@ buildGraph game =
     in
     game
         |> getNodes
-            { remaining = List.singleton (Dict.toList game.board)
+            { remaining = List.singleton (Game.Node.fromGame game)
             , nodes = Set.empty
             , winning = Set.empty
             , pathTo = Dict.empty

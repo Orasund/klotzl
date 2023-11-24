@@ -1,7 +1,14 @@
 module Game exposing (..)
 
 import Dict exposing (Dict)
-import Set
+import Set exposing (Set)
+
+
+type alias Tile =
+    { topLeft : ( Int, Int )
+    , size : ( Int, Int )
+    , blocks : Set ( Int, Int )
+    }
 
 
 type alias Game =
@@ -9,12 +16,113 @@ type alias Game =
     , width : Int
     , height : Int
     , goal : List ( Int, Int )
-    , tiles :
-        Dict
-            Int
-            { topLeft : ( Int, Int )
-            , size : ( Int, Int )
-            }
+    , tiles : Dict Int Tile
+    }
+
+
+singleBlockTile : ( Int, Int ) -> Tile
+singleBlockTile pos =
+    { topLeft = pos
+    , size = ( 1, 1 )
+    , blocks = Set.singleton ( 0, 0 )
+    }
+
+
+fromTiles :
+    { tiles : List (List ( Int, Int ))
+    , balls : List ( Int, Int )
+    , goals : List ( Int, Int )
+    }
+    -> Game
+fromTiles args =
+    let
+        buildTile list =
+            case list of
+                ( x0, y0 ) :: tail ->
+                    tail
+                        |> List.foldl
+                            (\( x, y ) tile ->
+                                { min =
+                                    { x = min tile.min.x x
+                                    , y = min tile.min.y y
+                                    }
+                                , max =
+                                    { x = max tile.max.x x
+                                    , y = max tile.max.y y
+                                    }
+                                , blocks = Set.insert ( x, y ) tile.blocks
+                                }
+                            )
+                            { min = { x = x0, y = y0 }
+                            , max = { x = x0, y = y0 }
+                            , blocks = Set.singleton ( x0, y0 )
+                            }
+                        |> (\tile ->
+                                { topLeft = ( tile.min.x, tile.min.y )
+                                , size =
+                                    ( tile.max.x - tile.min.x + 1
+                                    , tile.max.y - tile.min.y + 1
+                                    )
+                                , blocks =
+                                    tile.blocks
+                                        |> Set.map
+                                            (Tuple.mapBoth
+                                                ((+) -tile.min.x)
+                                                ((+) -tile.min.y)
+                                            )
+                                }
+                           )
+
+                [] ->
+                    { topLeft = ( 0, 0 )
+                    , size = ( 0, 0 )
+                    , blocks = Set.empty
+                    }
+
+        tiles =
+            List.indexedMap
+                (\i list ->
+                    ( i + 1, buildTile list )
+                )
+                args.tiles
+                ++ List.indexedMap (\i pos -> ( -(i + 1), singleBlockTile pos ))
+                    args.balls
+                |> Dict.fromList
+
+        board =
+            tiles
+                |> Dict.foldl
+                    (\i tile dict ->
+                        let
+                            ( x0, y0 ) =
+                                tile.topLeft
+                        in
+                        tile.blocks
+                            |> Set.foldl
+                                (\( x, y ) ->
+                                    Dict.insert ( x0 + x, y0 + y )
+                                        i
+                                )
+                                dict
+                    )
+                    Dict.empty
+
+        { width, height } =
+            board
+                |> Dict.keys
+                |> List.foldl
+                    (\( x, y ) dim ->
+                        { width = max dim.width (x + 1)
+                        , height = max dim.height (y + 1)
+                        }
+                    )
+                    { width = 0, height = 0 }
+    in
+    { goal = args.goals
+    , tiles = tiles
+    , width = width
+    , height = height
+    , board = board
     }
 
 
@@ -50,6 +158,7 @@ fromBoard args =
                                 |> Maybe.withDefault
                                     { min = { x = x, y = y }
                                     , max = { x = x, y = y }
+                                    , blocks = Set.singleton ( x, y )
                                     }
                                 |> (\tile ->
                                         { min =
@@ -60,6 +169,7 @@ fromBoard args =
                                             { x = max tile.max.x x
                                             , y = max tile.max.y y
                                             }
+                                        , blocks = Set.insert ( x, y ) tile.blocks
                                         }
                                    )
                                 |> Just
@@ -73,6 +183,13 @@ fromBoard args =
                         ( tile.max.x - tile.min.x + 1
                         , tile.max.y - tile.min.y + 1
                         )
+                    , blocks =
+                        tile.blocks
+                            |> Set.map
+                                (Tuple.mapBoth
+                                    ((+) -tile.min.x)
+                                    ((+) -tile.min.y)
+                                )
                     }
                 )
     }

@@ -3,13 +3,12 @@ module View exposing (..)
 import Config
 import Css
 import Dict exposing (Dict)
-import Game exposing (Game)
+import Game exposing (Game, Tile)
 import Html exposing (Attribute, Html)
 import Html.Attributes
-import Html.Events exposing (onClick)
 import Html.Keyed
 import Layout
-import Set exposing (Set)
+import Set
 
 
 square : List (Attribute msg) -> Html msg
@@ -34,7 +33,7 @@ tile :
     { nodes : Dict ( Int, Int ) Int
     , width : Int
     , height : Int
-    , tiles : Dict Int { topLeft : ( Int, Int ), size : ( Int, Int ) }
+    , tiles : Dict Int Tile
     , onClick : Int -> msg
     , goal : List ( Int, Int )
     }
@@ -53,7 +52,11 @@ tile args =
                                             { size, topLeft } =
                                                 args.tiles
                                                     |> Dict.get i
-                                                    |> Maybe.withDefault { topLeft = ( 0, 0 ), size = ( 0, 0 ) }
+                                                    |> Maybe.withDefault
+                                                        { topLeft = ( 0, 0 )
+                                                        , size = ( 0, 0 )
+                                                        , blocks = Set.empty
+                                                        }
 
                                             ( width, height ) =
                                                 size
