@@ -251,20 +251,29 @@ viewportMeta =
         []
 
 
-toHtml : { onClick : Int -> msg, transitioning : Bool } -> Maybe Game -> List (Html msg)
+toHtml :
+    { onClick : Int -> msg
+    , currentLevel : Int
+    , transitioning : Bool
+    }
+    -> Maybe Game
+    -> List (Html msg)
 toHtml args maybe =
     [ maybe
         |> Maybe.map
             (\game ->
-                { nodes = game.board
-                , width = game.width
-                , height = game.height
-                , tiles = game.tiles
-                , onClick = args.onClick
-                , goal = game.goal
-                }
+                [ String.fromInt args.currentLevel
+                    |> Layout.text [ Html.Attributes.style "color" "white" ]
+                , { nodes = game.board
+                  , width = game.width
+                  , height = game.height
+                  , tiles = game.tiles
+                  , onClick = args.onClick
+                  , goal = game.goal
+                  }
                     |> tile
-                    |> Layout.el
+                ]
+                    |> Layout.column
                         ([ Html.Attributes.style "height" "100%"
                          , if args.transitioning then
                             Css.container_loading

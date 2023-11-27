@@ -12,7 +12,7 @@ import Test.Game
 
 suite : Test
 suite =
-    List.range 1 8
+    List.range 1 13
         |> List.filterMap (\i -> Game.Level.get i |> Maybe.map (Tuple.pair i))
         |> List.map
             (\( i, game ) ->

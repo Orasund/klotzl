@@ -126,6 +126,23 @@ fromTiles args =
     }
 
 
+fromMatrix : List ( Int, Int ) -> List (List Int) -> Game
+fromMatrix goals rows =
+    { board =
+        rows
+            |> List.indexedMap
+                (\y row ->
+                    row
+                        |> List.indexedMap (\x i -> ( ( x, y ), i ))
+                        |> List.filter (\( _, i ) -> i /= 0)
+                )
+            |> List.concat
+            |> Dict.fromList
+    , goal = goals
+    }
+        |> fromBoard
+
+
 fromBoard :
     { board : Dict ( Int, Int ) Int
     , goal : List ( Int, Int )

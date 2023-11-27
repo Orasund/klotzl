@@ -39,8 +39,12 @@ main =
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { game = Just Game.Level.lvl1
-      , currentLevel = 1
+    let
+        currentLevel =
+            1
+    in
+    ( { game = Game.Level.get currentLevel
+      , currentLevel = currentLevel
       , transitioning = False
       }
     , Gen.Sound.asList |> RegisterSounds |> Port.fromElm
@@ -59,6 +63,7 @@ view model =
         model.game
             |> View.toHtml
                 { onClick = MoveBlock
+                , currentLevel = model.currentLevel
                 , transitioning = model.transitioning
                 }
     }
