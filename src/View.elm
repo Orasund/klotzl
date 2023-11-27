@@ -291,11 +291,9 @@ toHtml args maybe =
                         )
             )
         |> Maybe.withDefault
-            ([ "Thanks for playing"
-                |> Layout.text
-                    [ Html.Attributes.style "color" "white"
-                    , Html.Attributes.style "font-size" "50px"
-                    ]
+            ([ "Thanks" |> Layout.text []
+             , "for" |> Layout.text []
+             , "playing" |> Layout.text []
              ]
                 |> Layout.column
                     ([ Html.Attributes.style "height" "100%"
@@ -304,6 +302,8 @@ toHtml args maybe =
 
                        else
                         Css.container
+                     , Html.Attributes.style "color" "white"
+                     , Html.Attributes.style "font-size" "50px"
                      ]
                         ++ Layout.centered
                     )

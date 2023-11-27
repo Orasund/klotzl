@@ -10,10 +10,10 @@ get int =
             Just lvl1
 
         2 ->
-            Just lvl2
+            Just lvl3
 
         3 ->
-            Just lvl3
+            Just lvl2
 
         4 ->
             Just lvl3_1
@@ -25,13 +25,13 @@ get int =
             Just lvl5
 
         7 ->
-            Just lvl11
-
-        8 ->
             Just lvl12
 
-        9 ->
+        8 ->
             Just lvl6
+
+        9 ->
+            Just lvl9
 
         10 ->
             Just lvl7
@@ -107,14 +107,13 @@ lvl7 =
         ]
 
 
-
-{--lvl8 : Game
+lvl8 : Game
 lvl8 =
     Game.fromMatrix [ ( 0, -1 ), ( 2, -1 ) ]
         [ [ 0, 1, 0 ]
         , [ 2, 5, 3 ]
         , [ -1, 4, -2 ]
-        ]--}
+        ]
 
 
 lvl9 : Game
@@ -134,14 +133,12 @@ lvl10 =
         , [ 2, 5, 3 ]
         , [ -1, -3, -2 ]
         ]--}
-
-
-lvl11 : Game
+{--lvl11 : Game
 lvl11 =
     Game.fromMatrix [ ( 2, -1 ) ]
         [ [ 1, 0, 0 ]
         , [ 1, 1, -1 ]
-        ]
+        ]--}
 
 
 lvl12 : Game

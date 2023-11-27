@@ -7021,19 +7021,6 @@ var $author$project$Game$Level$lvl1 = A2(
 			_List_fromArray(
 			[1, -1])
 		]));
-var $author$project$Game$Level$lvl11 = A2(
-	$author$project$Game$fromMatrix,
-	_List_fromArray(
-		[
-			_Utils_Tuple2(2, -1)
-		]),
-	_List_fromArray(
-		[
-			_List_fromArray(
-			[1, 0, 0]),
-			_List_fromArray(
-			[1, 1, -1])
-		]));
 var $author$project$Game$Level$lvl12 = A2(
 	$author$project$Game$fromMatrix,
 	_List_fromArray(
@@ -7146,14 +7133,30 @@ var $author$project$Game$Level$lvl7 = A2(
 			_List_fromArray(
 			[-1, 2, 4, -2])
 		]));
+var $author$project$Game$Level$lvl9 = A2(
+	$author$project$Game$fromMatrix,
+	_List_fromArray(
+		[
+			_Utils_Tuple2(0, -1),
+			_Utils_Tuple2(3, -1)
+		]),
+	_List_fromArray(
+		[
+			_List_fromArray(
+			[0, 7, 2, 0]),
+			_List_fromArray(
+			[3, 1, 2, 4]),
+			_List_fromArray(
+			[-1, 1, 6, -2])
+		]));
 var $author$project$Game$Level$get = function (_int) {
 	switch (_int) {
 		case 1:
 			return $elm$core$Maybe$Just($author$project$Game$Level$lvl1);
 		case 2:
-			return $elm$core$Maybe$Just($author$project$Game$Level$lvl2);
-		case 3:
 			return $elm$core$Maybe$Just($author$project$Game$Level$lvl3);
+		case 3:
+			return $elm$core$Maybe$Just($author$project$Game$Level$lvl2);
 		case 4:
 			return $elm$core$Maybe$Just($author$project$Game$Level$lvl3_1);
 		case 5:
@@ -7161,11 +7164,11 @@ var $author$project$Game$Level$get = function (_int) {
 		case 6:
 			return $elm$core$Maybe$Just($author$project$Game$Level$lvl5);
 		case 7:
-			return $elm$core$Maybe$Just($author$project$Game$Level$lvl11);
-		case 8:
 			return $elm$core$Maybe$Just($author$project$Game$Level$lvl12);
-		case 9:
+		case 8:
 			return $elm$core$Maybe$Just($author$project$Game$Level$lvl6);
+		case 9:
+			return $elm$core$Maybe$Just($author$project$Game$Level$lvl9);
 		case 10:
 			return $elm$core$Maybe$Just($author$project$Game$Level$lvl7);
 		default:
@@ -7960,19 +7963,16 @@ var $author$project$View$toHtml = F2(
 						_List_fromArray(
 							[
 								A2($elm$html$Html$Attributes$style, 'height', '100%'),
-								args.transitioning ? $author$project$Css$container_loading : $author$project$Css$container
+								args.transitioning ? $author$project$Css$container_loading : $author$project$Css$container,
+								A2($elm$html$Html$Attributes$style, 'color', 'white'),
+								A2($elm$html$Html$Attributes$style, 'font-size', '50px')
 							]),
 						$Orasund$elm_layout$Layout$centered),
 					_List_fromArray(
 						[
-							A2(
-							$Orasund$elm_layout$Layout$text,
-							_List_fromArray(
-								[
-									A2($elm$html$Html$Attributes$style, 'color', 'white'),
-									A2($elm$html$Html$Attributes$style, 'font-size', '50px')
-								]),
-							'Thanks for playing')
+							A2($Orasund$elm_layout$Layout$text, _List_Nil, 'Thanks'),
+							A2($Orasund$elm_layout$Layout$text, _List_Nil, 'for'),
+							A2($Orasund$elm_layout$Layout$text, _List_Nil, 'playing')
 						])),
 				A2(
 					$elm$core$Maybe$map,
