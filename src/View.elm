@@ -263,7 +263,13 @@ toHtml args maybe =
         |> Maybe.map
             (\game ->
                 [ String.fromInt args.currentLevel
-                    |> Layout.text [ Html.Attributes.style "color" "white" ]
+                    ++ " / 10"
+                    |> Layout.text
+                        [ Html.Attributes.style "color" "white"
+                        , Html.Attributes.style "position" "relative"
+                        , Html.Attributes.style "bottom" (Config.squareSize * 3 // 2 |> String.fromInt)
+                        , Html.Attributes.style "font-size" "50px"
+                        ]
                 , { nodes = game.board
                   , width = game.width
                   , height = game.height
@@ -284,7 +290,24 @@ toHtml args maybe =
                             ++ Layout.centered
                         )
             )
-        |> Maybe.withDefault Layout.none
+        |> Maybe.withDefault
+            ([ "Thanks for playing"
+                |> Layout.text
+                    [ Html.Attributes.style "color" "white"
+                    , Html.Attributes.style "font-size" "50px"
+                    ]
+             ]
+                |> Layout.column
+                    ([ Html.Attributes.style "height" "100%"
+                     , if args.transitioning then
+                        Css.container_loading
+
+                       else
+                        Css.container
+                     ]
+                        ++ Layout.centered
+                    )
+            )
     , viewportMeta
     , Html.node "link"
         [ Html.Attributes.rel "stylesheet"

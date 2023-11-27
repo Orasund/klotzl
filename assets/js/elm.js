@@ -7498,10 +7498,8 @@ var $elm$virtual_dom$VirtualDom$node = function (tag) {
 		_VirtualDom_noScript(tag));
 };
 var $elm$html$Html$node = $elm$virtual_dom$VirtualDom$node;
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $Orasund$elm_layout$Layout$none = $elm$html$Html$text('');
 var $elm$html$Html$Attributes$rel = _VirtualDom_attribute('rel');
+var $author$project$Config$squareSize = 100;
 var $Orasund$elm_layout$Layout$el = F2(
 	function (attrs, content) {
 		return A2(
@@ -7513,6 +7511,8 @@ var $Orasund$elm_layout$Layout$el = F2(
 			_List_fromArray(
 				[content]));
 	});
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $Orasund$elm_layout$Layout$text = F2(
 	function (attrs, content) {
 		return A2(
@@ -7601,7 +7601,7 @@ var $elm$core$List$concatMap = F2(
 		return $elm$core$List$concat(
 			A2($elm$core$List$map, f, list));
 	});
-var $author$project$Config$squareSize = 100;
+var $Orasund$elm_layout$Layout$none = $elm$html$Html$text('');
 var $author$project$View$goal = function (attrs) {
 	return A2(
 		$Orasund$elm_layout$Layout$el,
@@ -7954,7 +7954,26 @@ var $author$project$View$toHtml = F2(
 			[
 				A2(
 				$elm$core$Maybe$withDefault,
-				$Orasund$elm_layout$Layout$none,
+				A2(
+					$Orasund$elm_layout$Layout$column,
+					_Utils_ap(
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'height', '100%'),
+								args.transitioning ? $author$project$Css$container_loading : $author$project$Css$container
+							]),
+						$Orasund$elm_layout$Layout$centered),
+					_List_fromArray(
+						[
+							A2(
+							$Orasund$elm_layout$Layout$text,
+							_List_fromArray(
+								[
+									A2($elm$html$Html$Attributes$style, 'color', 'white'),
+									A2($elm$html$Html$Attributes$style, 'font-size', '50px')
+								]),
+							'Thanks for playing')
+						])),
 				A2(
 					$elm$core$Maybe$map,
 					function (game) {
@@ -7973,9 +7992,15 @@ var $author$project$View$toHtml = F2(
 									$Orasund$elm_layout$Layout$text,
 									_List_fromArray(
 										[
-											A2($elm$html$Html$Attributes$style, 'color', 'white')
+											A2($elm$html$Html$Attributes$style, 'color', 'white'),
+											A2($elm$html$Html$Attributes$style, 'position', 'relative'),
+											A2(
+											$elm$html$Html$Attributes$style,
+											'bottom',
+											$elm$core$String$fromInt((($author$project$Config$squareSize * 3) / 2) | 0)),
+											A2($elm$html$Html$Attributes$style, 'font-size', '50px')
 										]),
-									$elm$core$String$fromInt(args.currentLevel)),
+									$elm$core$String$fromInt(args.currentLevel) + ' / 10'),
 									$author$project$View$tile(
 									{goal: game.goal, height: game.height, nodes: game.board, onClick: args.onClick, tiles: game.tiles, width: game.width})
 								]));
