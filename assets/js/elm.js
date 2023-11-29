@@ -6783,6 +6783,90 @@ var $author$project$Port$fromElm = function (value) {
 	return $author$project$Port$interopFromElm(
 		A3($elm$core$Basics$apR, $author$project$PortDefinition$interop.fromElm, $dillonkearns$elm_ts_json$TsJson$Encode$encoder, value));
 };
+var $author$project$Main$init = function (_v0) {
+	var currentLevel = 1;
+	return _Utils_Tuple2(
+		{currentLevel: currentLevel, game: $elm$core$Maybe$Nothing, transitioning: false},
+		$author$project$Port$fromElm(
+			$author$project$PortDefinition$RegisterSounds($author$project$Gen$Sound$asList)));
+};
+var $author$project$Main$Received = function (a) {
+	return {$: 'Received', a: a};
+};
+var $elm$core$Platform$Sub$map = _Platform_map;
+var $elm$json$Json$Decode$decodeValue = _Json_run;
+var $author$project$Port$interopToElm = _Platform_incomingPort('interopToElm', $elm$json$Json$Decode$value);
+var $author$project$Port$toElm = $author$project$Port$interopToElm(
+	$elm$json$Json$Decode$decodeValue(
+		$dillonkearns$elm_ts_json$TsJson$Decode$decoder($author$project$PortDefinition$interop.toElm)));
+var $author$project$Main$subscriptions = function (_v0) {
+	return A2($elm$core$Platform$Sub$map, $author$project$Main$Received, $author$project$Port$toElm);
+};
+var $author$project$Main$LoadGame = {$: 'LoadGame'};
+var $author$project$PortDefinition$PlaySound = function (a) {
+	return {$: 'PlaySound', a: a};
+};
+var $author$project$Main$UnloadGame = {$: 'UnloadGame'};
+var $elm$core$Maybe$andThen = F2(
+	function (callback, maybeValue) {
+		if (maybeValue.$ === 'Just') {
+			var value = maybeValue.a;
+			return callback(value);
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
+var $elm$core$List$any = F2(
+	function (isOkay, list) {
+		any:
+		while (true) {
+			if (!list.b) {
+				return false;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				if (isOkay(x)) {
+					return true;
+				} else {
+					var $temp$isOkay = isOkay,
+						$temp$list = xs;
+					isOkay = $temp$isOkay;
+					list = $temp$list;
+					continue any;
+				}
+			}
+		}
+	});
+var $elm$core$Basics$composeL = F3(
+	function (g, f, x) {
+		return g(
+			f(x));
+	});
+var $elm$core$Basics$not = _Basics_not;
+var $elm$core$List$all = F2(
+	function (isOkay, list) {
+		return !A2(
+			$elm$core$List$any,
+			A2($elm$core$Basics$composeL, $elm$core$Basics$not, isOkay),
+			list);
+	});
+var $author$project$Game$gameWon = function (game) {
+	return A2(
+		$elm$core$List$all,
+		function (goal) {
+			return A2(
+				$elm$core$Maybe$withDefault,
+				false,
+				A2(
+					$elm$core$Maybe$map,
+					function (_int) {
+						return _int < 0;
+					},
+					A2($elm$core$Dict$get, goal, game.board)));
+		},
+		game.goal);
+};
 var $elm$core$List$append = F2(
 	function (xs, ys) {
 		if (!ys.b) {
@@ -7175,94 +7259,6 @@ var $author$project$Game$Level$get = function (_int) {
 			return $elm$core$Maybe$Nothing;
 	}
 };
-var $author$project$Main$init = function (_v0) {
-	var currentLevel = 1;
-	return _Utils_Tuple2(
-		{
-			currentLevel: currentLevel,
-			game: $author$project$Game$Level$get(currentLevel),
-			transitioning: false
-		},
-		$author$project$Port$fromElm(
-			$author$project$PortDefinition$RegisterSounds($author$project$Gen$Sound$asList)));
-};
-var $author$project$Main$Received = function (a) {
-	return {$: 'Received', a: a};
-};
-var $elm$core$Platform$Sub$map = _Platform_map;
-var $elm$json$Json$Decode$decodeValue = _Json_run;
-var $author$project$Port$interopToElm = _Platform_incomingPort('interopToElm', $elm$json$Json$Decode$value);
-var $author$project$Port$toElm = $author$project$Port$interopToElm(
-	$elm$json$Json$Decode$decodeValue(
-		$dillonkearns$elm_ts_json$TsJson$Decode$decoder($author$project$PortDefinition$interop.toElm)));
-var $author$project$Main$subscriptions = function (_v0) {
-	return A2($elm$core$Platform$Sub$map, $author$project$Main$Received, $author$project$Port$toElm);
-};
-var $author$project$Main$LoadGame = {$: 'LoadGame'};
-var $author$project$PortDefinition$PlaySound = function (a) {
-	return {$: 'PlaySound', a: a};
-};
-var $author$project$Main$UnloadGame = {$: 'UnloadGame'};
-var $elm$core$Maybe$andThen = F2(
-	function (callback, maybeValue) {
-		if (maybeValue.$ === 'Just') {
-			var value = maybeValue.a;
-			return callback(value);
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	});
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $elm$core$List$any = F2(
-	function (isOkay, list) {
-		any:
-		while (true) {
-			if (!list.b) {
-				return false;
-			} else {
-				var x = list.a;
-				var xs = list.b;
-				if (isOkay(x)) {
-					return true;
-				} else {
-					var $temp$isOkay = isOkay,
-						$temp$list = xs;
-					isOkay = $temp$isOkay;
-					list = $temp$list;
-					continue any;
-				}
-			}
-		}
-	});
-var $elm$core$Basics$composeL = F3(
-	function (g, f, x) {
-		return g(
-			f(x));
-	});
-var $elm$core$Basics$not = _Basics_not;
-var $elm$core$List$all = F2(
-	function (isOkay, list) {
-		return !A2(
-			$elm$core$List$any,
-			A2($elm$core$Basics$composeL, $elm$core$Basics$not, isOkay),
-			list);
-	});
-var $author$project$Game$gameWon = function (game) {
-	return A2(
-		$elm$core$List$all,
-		function (goal) {
-			return A2(
-				$elm$core$Maybe$withDefault,
-				false,
-				A2(
-					$elm$core$Maybe$map,
-					function (_int) {
-						return _int < 0;
-					},
-					A2($elm$core$Dict$get, goal, game.board)));
-		},
-		game.goal);
-};
 var $elm$core$Debug$log = _Debug_log;
 var $elm$core$Dict$filter = F2(
 	function (isGood, dict) {
@@ -7490,19 +7486,32 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $author$project$Css$container = $elm$html$Html$Attributes$class('container');
 var $author$project$Css$container_loading = $elm$html$Html$Attributes$class('container-loading');
-var $elm$html$Html$Attributes$href = function (url) {
-	return A2(
-		$elm$html$Html$Attributes$stringProperty,
-		'href',
-		_VirtualDom_noJavaScriptUri(url));
+var $author$project$View$Game$description = function (_int) {
+	switch (_int) {
+		case 1:
+			return 'Move the ball into the goal to win';
+		case 2:
+			return 'You can move tiles aswell';
+		case 3:
+			return 'You can only move something if the direction is unique.';
+		case 4:
+			return 'Tiles can have different sizes';
+		case 5:
+			return 'Sometimes you have to work around a tile';
+		case 6:
+			return 'Don\'t give up';
+		case 7:
+			return 'Solve the level step by step';
+		case 8:
+			return 'Get all balls into the goals';
+		case 9:
+			return 'Apply everything you learned sofar';
+		case 10:
+			return 'Every level is solvable';
+		default:
+			return '';
+	}
 };
-var $elm$virtual_dom$VirtualDom$node = function (tag) {
-	return _VirtualDom_node(
-		_VirtualDom_noScript(tag));
-};
-var $elm$html$Html$node = $elm$virtual_dom$VirtualDom$node;
-var $elm$html$Html$Attributes$rel = _VirtualDom_attribute('rel');
-var $author$project$Config$squareSize = 100;
 var $Orasund$elm_layout$Layout$el = F2(
 	function (attrs, content) {
 		return A2(
@@ -7514,6 +7523,42 @@ var $Orasund$elm_layout$Layout$el = F2(
 			_List_fromArray(
 				[content]));
 	});
+var $elm$core$String$fromFloat = _String_fromNumber;
+var $Orasund$elm_layout$Layout$gap = function (n) {
+	return A2(
+		$elm$html$Html$Attributes$style,
+		'gap',
+		$elm$core$String$fromFloat(n) + 'px');
+};
+var $elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
+};
+var $elm$html$Html$a = _VirtualDom_node('a');
+var $elm$html$Html$Attributes$target = $elm$html$Html$Attributes$stringProperty('target');
+var $Orasund$elm_layout$Layout$linkToNewTab = F3(
+	function (attrs, link, content) {
+		return A2(
+			$elm$html$Html$a,
+			_Utils_ap(
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$href(link),
+						$elm$html$Html$Attributes$target('_blank')
+					]),
+				attrs),
+			_List_fromArray(
+				[content]));
+	});
+var $elm$virtual_dom$VirtualDom$node = function (tag) {
+	return _VirtualDom_node(
+		_VirtualDom_noScript(tag));
+};
+var $elm$html$Html$node = $elm$virtual_dom$VirtualDom$node;
+var $elm$html$Html$Attributes$rel = _VirtualDom_attribute('rel');
+var $author$project$Config$squareSize = 100;
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $Orasund$elm_layout$Layout$text = F2(
@@ -7937,7 +7982,6 @@ var $author$project$View$tile = function (args) {
 					},
 					A2($elm$core$List$range, -1, args.height)))));
 };
-var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
 var $author$project$View$viewportMeta = function () {
 	var width = $elm$core$String$fromFloat(400);
@@ -7956,56 +8000,99 @@ var $author$project$View$toHtml = F2(
 		return _List_fromArray(
 			[
 				A2(
-				$elm$core$Maybe$withDefault,
-				A2(
-					$Orasund$elm_layout$Layout$column,
-					_Utils_ap(
-						_List_fromArray(
-							[
-								A2($elm$html$Html$Attributes$style, 'height', '100%'),
-								args.transitioning ? $author$project$Css$container_loading : $author$project$Css$container,
-								A2($elm$html$Html$Attributes$style, 'color', 'white'),
-								A2($elm$html$Html$Attributes$style, 'font-size', '50px')
-							]),
-						$Orasund$elm_layout$Layout$centered),
+				$Orasund$elm_layout$Layout$el,
+				_Utils_ap(
 					_List_fromArray(
 						[
-							A2($Orasund$elm_layout$Layout$text, _List_Nil, 'Thanks'),
-							A2($Orasund$elm_layout$Layout$text, _List_Nil, 'for'),
-							A2($Orasund$elm_layout$Layout$text, _List_Nil, 'playing')
-						])),
+							A2($elm$html$Html$Attributes$style, 'height', '100%'),
+							args.transitioning ? $author$project$Css$container_loading : $author$project$Css$container,
+							A2($elm$html$Html$Attributes$style, 'color', 'white'),
+							A2($elm$html$Html$Attributes$style, 'font-size', '20px')
+						]),
+					$Orasund$elm_layout$Layout$centered),
 				A2(
-					$elm$core$Maybe$map,
-					function (game) {
-						return A2(
-							$Orasund$elm_layout$Layout$column,
-							_Utils_ap(
-								_List_fromArray(
-									[
-										A2($elm$html$Html$Attributes$style, 'height', '100%'),
-										args.transitioning ? $author$project$Css$container_loading : $author$project$Css$container
-									]),
-								$Orasund$elm_layout$Layout$centered),
+					$elm$core$Maybe$withDefault,
+					A2(
+						$Orasund$elm_layout$Layout$column,
+						_Utils_ap(
 							_List_fromArray(
 								[
-									A2(
-									$Orasund$elm_layout$Layout$text,
+									A2($elm$html$Html$Attributes$style, 'width', '400px'),
+									A2($elm$html$Html$Attributes$style, 'color', 'white'),
+									$Orasund$elm_layout$Layout$gap(80)
+								]),
+							$Orasund$elm_layout$Layout$centered),
+						_List_fromArray(
+							[
+								A2(
+								$Orasund$elm_layout$Layout$column,
+								A2(
+									$elm$core$List$cons,
+									A2($elm$html$Html$Attributes$style, 'font-size', '50px'),
+									$Orasund$elm_layout$Layout$centered),
+								_List_fromArray(
+									[
+										A2($Orasund$elm_layout$Layout$text, _List_Nil, 'Thanks'),
+										A2($Orasund$elm_layout$Layout$text, _List_Nil, 'for'),
+										A2($Orasund$elm_layout$Layout$text, _List_Nil, 'playing')
+									])),
+								A2(
+								$Orasund$elm_layout$Layout$column,
+								A2(
+									$elm$core$List$cons,
+									$Orasund$elm_layout$Layout$gap(10),
+									$Orasund$elm_layout$Layout$centered),
+								_List_fromArray(
+									[
+										A2($Orasund$elm_layout$Layout$text, _List_Nil, 'Please comment and subscribe'),
+										A2($Orasund$elm_layout$Layout$text, _List_Nil, 'if you liked the game')
+									])),
+								A3(
+								$Orasund$elm_layout$Layout$linkToNewTab,
+								_List_fromArray(
+									[
+										A2($elm$html$Html$Attributes$style, 'color', 'blue')
+									]),
+								'https://orasund.itch.io/',
+								A2($Orasund$elm_layout$Layout$text, _List_Nil, 'checkout my other games'))
+							])),
+					A2(
+						$elm$core$Maybe$map,
+						function (game) {
+							return A2(
+								$Orasund$elm_layout$Layout$column,
+								_Utils_ap(
 									_List_fromArray(
 										[
+											A2($elm$html$Html$Attributes$style, 'width', '400px'),
 											A2($elm$html$Html$Attributes$style, 'color', 'white'),
-											A2($elm$html$Html$Attributes$style, 'position', 'relative'),
-											A2(
-											$elm$html$Html$Attributes$style,
-											'bottom',
-											$elm$core$String$fromInt((($author$project$Config$squareSize * 3) / 2) | 0)),
-											A2($elm$html$Html$Attributes$style, 'font-size', '50px')
+											$Orasund$elm_layout$Layout$gap(20)
 										]),
-									$elm$core$String$fromInt(args.currentLevel) + ' / 10'),
-									$author$project$View$tile(
-									{goal: game.goal, height: game.height, nodes: game.board, onClick: args.onClick, tiles: game.tiles, width: game.width})
-								]));
-					},
-					maybe)),
+									$Orasund$elm_layout$Layout$centered),
+								_List_fromArray(
+									[
+										A2(
+										$Orasund$elm_layout$Layout$text,
+										_List_fromArray(
+											[
+												A2($elm$html$Html$Attributes$style, 'color', 'white'),
+												A2($elm$html$Html$Attributes$style, 'position', 'relative'),
+												A2(
+												$elm$html$Html$Attributes$style,
+												'bottom',
+												$elm$core$String$fromInt($author$project$Config$squareSize)),
+												A2($elm$html$Html$Attributes$style, 'font-size', '50px')
+											]),
+										$elm$core$String$fromInt(args.currentLevel) + ' / 10'),
+										$author$project$View$tile(
+										{goal: game.goal, height: game.height, nodes: game.board, onClick: args.onClick, tiles: game.tiles, width: game.width}),
+										A2(
+										$Orasund$elm_layout$Layout$text,
+										_List_Nil,
+										$author$project$View$Game$description(args.currentLevel))
+									]));
+						},
+						maybe))),
 				$author$project$View$viewportMeta,
 				A3(
 				$elm$html$Html$node,

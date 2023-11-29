@@ -43,7 +43,7 @@ init () =
         currentLevel =
             1
     in
-    ( { game = Game.Level.get currentLevel
+    ( { game = Nothing --Game.Level.get currentLevel
       , currentLevel = currentLevel
       , transitioning = False
       }

@@ -9,6 +9,7 @@ import Html.Attributes
 import Html.Keyed
 import Layout
 import Set
+import View.Game
 
 
 square : List (Attribute msg) -> Html msg
@@ -267,7 +268,7 @@ toHtml args maybe =
                     |> Layout.text
                         [ Html.Attributes.style "color" "white"
                         , Html.Attributes.style "position" "relative"
-                        , Html.Attributes.style "bottom" (Config.squareSize * 3 // 2 |> String.fromInt)
+                        , Html.Attributes.style "bottom" (Config.squareSize |> String.fromInt)
                         , Html.Attributes.style "font-size" "50px"
                         ]
                 , { nodes = game.board
@@ -278,35 +279,56 @@ toHtml args maybe =
                   , goal = game.goal
                   }
                     |> tile
+                , View.Game.description args.currentLevel
+                    |> Layout.text []
                 ]
                     |> Layout.column
-                        ([ Html.Attributes.style "height" "100%"
-                         , if args.transitioning then
-                            Css.container_loading
-
-                           else
-                            Css.container
+                        ([ Html.Attributes.style "width" "400px"
+                         , Html.Attributes.style "color" "white"
+                         , Layout.gap 20
                          ]
                             ++ Layout.centered
                         )
             )
         |> Maybe.withDefault
-            ([ "Thanks" |> Layout.text []
-             , "for" |> Layout.text []
-             , "playing" |> Layout.text []
+            ([ [ "Thanks" |> Layout.text []
+               , "for" |> Layout.text []
+               , "playing" |> Layout.text []
+               ]
+                |> Layout.column
+                    (Html.Attributes.style "font-size" "50px"
+                        :: Layout.centered
+                    )
+             , [ "Please comment and subscribe" |> Layout.text []
+               , "if you liked the game" |> Layout.text []
+               ]
+                |> Layout.column (Layout.gap 10 :: Layout.centered)
+             , "checkout my other games"
+                |> Layout.text []
+                |> Layout.linkToNewTab
+                    [ Html.Attributes.style "color" "blue"
+                    ]
+                    "https://orasund.itch.io/"
              ]
                 |> Layout.column
-                    ([ Html.Attributes.style "height" "100%"
-                     , if args.transitioning then
-                        Css.container_loading
-
-                       else
-                        Css.container
+                    ([ Html.Attributes.style "width" "400px"
                      , Html.Attributes.style "color" "white"
-                     , Html.Attributes.style "font-size" "50px"
+                     , Layout.gap 80
                      ]
                         ++ Layout.centered
                     )
+            )
+        |> Layout.el
+            ([ Html.Attributes.style "height" "100%"
+             , if args.transitioning then
+                Css.container_loading
+
+               else
+                Css.container
+             , Html.Attributes.style "color" "white"
+             , Html.Attributes.style "font-size" "20px"
+             ]
+                ++ Layout.centered
             )
     , viewportMeta
     , Html.node "link"
