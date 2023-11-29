@@ -5,7 +5,7 @@ description : Int -> String
 description int =
     case int of
         1 ->
-            "Move the ball into the goal to win"
+            "Click the ball to move it into the goal"
 
         2 ->
             "You can move tiles aswell"

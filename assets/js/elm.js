@@ -6783,90 +6783,6 @@ var $author$project$Port$fromElm = function (value) {
 	return $author$project$Port$interopFromElm(
 		A3($elm$core$Basics$apR, $author$project$PortDefinition$interop.fromElm, $dillonkearns$elm_ts_json$TsJson$Encode$encoder, value));
 };
-var $author$project$Main$init = function (_v0) {
-	var currentLevel = 1;
-	return _Utils_Tuple2(
-		{currentLevel: currentLevel, game: $elm$core$Maybe$Nothing, transitioning: false},
-		$author$project$Port$fromElm(
-			$author$project$PortDefinition$RegisterSounds($author$project$Gen$Sound$asList)));
-};
-var $author$project$Main$Received = function (a) {
-	return {$: 'Received', a: a};
-};
-var $elm$core$Platform$Sub$map = _Platform_map;
-var $elm$json$Json$Decode$decodeValue = _Json_run;
-var $author$project$Port$interopToElm = _Platform_incomingPort('interopToElm', $elm$json$Json$Decode$value);
-var $author$project$Port$toElm = $author$project$Port$interopToElm(
-	$elm$json$Json$Decode$decodeValue(
-		$dillonkearns$elm_ts_json$TsJson$Decode$decoder($author$project$PortDefinition$interop.toElm)));
-var $author$project$Main$subscriptions = function (_v0) {
-	return A2($elm$core$Platform$Sub$map, $author$project$Main$Received, $author$project$Port$toElm);
-};
-var $author$project$Main$LoadGame = {$: 'LoadGame'};
-var $author$project$PortDefinition$PlaySound = function (a) {
-	return {$: 'PlaySound', a: a};
-};
-var $author$project$Main$UnloadGame = {$: 'UnloadGame'};
-var $elm$core$Maybe$andThen = F2(
-	function (callback, maybeValue) {
-		if (maybeValue.$ === 'Just') {
-			var value = maybeValue.a;
-			return callback(value);
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	});
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $elm$core$List$any = F2(
-	function (isOkay, list) {
-		any:
-		while (true) {
-			if (!list.b) {
-				return false;
-			} else {
-				var x = list.a;
-				var xs = list.b;
-				if (isOkay(x)) {
-					return true;
-				} else {
-					var $temp$isOkay = isOkay,
-						$temp$list = xs;
-					isOkay = $temp$isOkay;
-					list = $temp$list;
-					continue any;
-				}
-			}
-		}
-	});
-var $elm$core$Basics$composeL = F3(
-	function (g, f, x) {
-		return g(
-			f(x));
-	});
-var $elm$core$Basics$not = _Basics_not;
-var $elm$core$List$all = F2(
-	function (isOkay, list) {
-		return !A2(
-			$elm$core$List$any,
-			A2($elm$core$Basics$composeL, $elm$core$Basics$not, isOkay),
-			list);
-	});
-var $author$project$Game$gameWon = function (game) {
-	return A2(
-		$elm$core$List$all,
-		function (goal) {
-			return A2(
-				$elm$core$Maybe$withDefault,
-				false,
-				A2(
-					$elm$core$Maybe$map,
-					function (_int) {
-						return _int < 0;
-					},
-					A2($elm$core$Dict$get, goal, game.board)));
-		},
-		game.goal);
-};
 var $elm$core$List$append = F2(
 	function (xs, ys) {
 		if (!ys.b) {
@@ -7259,6 +7175,94 @@ var $author$project$Game$Level$get = function (_int) {
 			return $elm$core$Maybe$Nothing;
 	}
 };
+var $author$project$Main$init = function (_v0) {
+	var currentLevel = 1;
+	return _Utils_Tuple2(
+		{
+			currentLevel: currentLevel,
+			game: $author$project$Game$Level$get(currentLevel),
+			transitioning: false
+		},
+		$author$project$Port$fromElm(
+			$author$project$PortDefinition$RegisterSounds($author$project$Gen$Sound$asList)));
+};
+var $author$project$Main$Received = function (a) {
+	return {$: 'Received', a: a};
+};
+var $elm$core$Platform$Sub$map = _Platform_map;
+var $elm$json$Json$Decode$decodeValue = _Json_run;
+var $author$project$Port$interopToElm = _Platform_incomingPort('interopToElm', $elm$json$Json$Decode$value);
+var $author$project$Port$toElm = $author$project$Port$interopToElm(
+	$elm$json$Json$Decode$decodeValue(
+		$dillonkearns$elm_ts_json$TsJson$Decode$decoder($author$project$PortDefinition$interop.toElm)));
+var $author$project$Main$subscriptions = function (_v0) {
+	return A2($elm$core$Platform$Sub$map, $author$project$Main$Received, $author$project$Port$toElm);
+};
+var $author$project$Main$LoadGame = {$: 'LoadGame'};
+var $author$project$PortDefinition$PlaySound = function (a) {
+	return {$: 'PlaySound', a: a};
+};
+var $author$project$Main$UnloadGame = {$: 'UnloadGame'};
+var $elm$core$Maybe$andThen = F2(
+	function (callback, maybeValue) {
+		if (maybeValue.$ === 'Just') {
+			var value = maybeValue.a;
+			return callback(value);
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
+var $elm$core$List$any = F2(
+	function (isOkay, list) {
+		any:
+		while (true) {
+			if (!list.b) {
+				return false;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				if (isOkay(x)) {
+					return true;
+				} else {
+					var $temp$isOkay = isOkay,
+						$temp$list = xs;
+					isOkay = $temp$isOkay;
+					list = $temp$list;
+					continue any;
+				}
+			}
+		}
+	});
+var $elm$core$Basics$composeL = F3(
+	function (g, f, x) {
+		return g(
+			f(x));
+	});
+var $elm$core$Basics$not = _Basics_not;
+var $elm$core$List$all = F2(
+	function (isOkay, list) {
+		return !A2(
+			$elm$core$List$any,
+			A2($elm$core$Basics$composeL, $elm$core$Basics$not, isOkay),
+			list);
+	});
+var $author$project$Game$gameWon = function (game) {
+	return A2(
+		$elm$core$List$all,
+		function (goal) {
+			return A2(
+				$elm$core$Maybe$withDefault,
+				false,
+				A2(
+					$elm$core$Maybe$map,
+					function (_int) {
+						return _int < 0;
+					},
+					A2($elm$core$Dict$get, goal, game.board)));
+		},
+		game.goal);
+};
 var $elm$core$Debug$log = _Debug_log;
 var $elm$core$Dict$filter = F2(
 	function (isGood, dict) {
@@ -7489,7 +7493,7 @@ var $author$project$Css$container_loading = $elm$html$Html$Attributes$class('con
 var $author$project$View$Game$description = function (_int) {
 	switch (_int) {
 		case 1:
-			return 'Move the ball into the goal to win';
+			return 'Click the ball to move it into the goal';
 		case 2:
 			return 'You can move tiles aswell';
 		case 3:
