@@ -1,19 +1,3 @@
-# elm-game-template
+# Klotzl
 
-Work in progress
-
-## Table of content
-
-* [**Node Scripts**](docs/Scripts.md)
-* [**Sound**](docs/Sound.md)
-
-
-## Roadmap
-
-- [x] support for pixel graphics
-- [x] Mobile friendly
-- [x] Basic ports for Sound
-- [x] Optional sound buffers
-- [ ] Optional image buffers
-- [ ] Basic Canvas included
-- [ ] Basic WebGL included
+Klotzl is a little puzzle game that can be played on [itch.io](https://github.com/Orasund/klotzl)
