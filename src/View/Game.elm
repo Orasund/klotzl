@@ -8,10 +8,10 @@ description int =
             "Click the ball to move it into the goal"
 
         2 ->
-            "You can move tiles aswell"
+            "You can only move something if the direction is unique."
 
         3 ->
-            "You can only move something if the direction is unique."
+            "If you think you're stuck, just try around for a bit"
 
         4 ->
             "Tiles can have different sizes"
@@ -32,7 +32,7 @@ description int =
             "Apply everything you learned sofar"
 
         10 ->
-            "Every level is solvable"
+            "You can solve this level"
 
         _ ->
             ""

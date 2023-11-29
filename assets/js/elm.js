@@ -7495,9 +7495,9 @@ var $author$project$View$Game$description = function (_int) {
 		case 1:
 			return 'Click the ball to move it into the goal';
 		case 2:
-			return 'You can move tiles aswell';
-		case 3:
 			return 'You can only move something if the direction is unique.';
+		case 3:
+			return 'If you think you\'re stuck, just try around for a bit';
 		case 4:
 			return 'Tiles can have different sizes';
 		case 5:
@@ -7511,7 +7511,7 @@ var $author$project$View$Game$description = function (_int) {
 		case 9:
 			return 'Apply everything you learned sofar';
 		case 10:
-			return 'Every level is solvable';
+			return 'You can solve this level';
 		default:
 			return '';
 	}
