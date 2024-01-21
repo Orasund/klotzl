@@ -40,7 +40,7 @@ export function playSound(path, playEndlessly, onended) {
 
     audio.onended = playEndlessly
         ? () => {
-            audio.load;
+            audio.load();
             audio.play();
         }
         : onended()
