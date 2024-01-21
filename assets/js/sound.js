@@ -45,9 +45,12 @@ export function playSound(path, playEndlessly, onended) {
         }
         : onended()
 
-    if (sound.ctx.state === "suspended")
+    if (sound.ctx.state === "suspended") {
         sound.ctx.resume();
-    else {
+        audio.load();
+        audio.play();
+        console.log("sound resumed")
+    } else {
         audio.load();
         audio.play();
     }
